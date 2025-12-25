@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Seu Diário</h3>
+    <a href="/adicionar" class="btn btn-success">+ Registrar Dia</a>
+</div>
+<div class="row">
+    {% for entrada in entradas %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-header bg-white d-flex justify-content-between">
+                <strong>{{ entrada.data_registro.strftime('%d/%m/%Y') }}</strong>
+                <span class="badge bg-secondary">Nota {{ entrada.nota_dia }}</span>
+            </div>
+            <div class="card-body">
+                {% if entrada.musica_dia %}<p class="text-primary small mb-2">🎵 {{ entrada.musica_dia }}</p>{% endif %}
+                <p class="card-text">{{ entrada.descricao }}</p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center text-muted"><p>Nenhuma memória registrada ainda.</p></div>
+    {% endfor %}
+</div>
+{% endblock %}

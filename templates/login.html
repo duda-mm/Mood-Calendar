@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    /* Ajuste específico para centralizar o Login na "mesa" */
+    .login-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 80vh;
+    }
+
+    .auth-card {
+        background-color: white;
+        border-radius: 24px;
+        overflow: hidden; /* Garante que a imagem não saia da borda */
+        box-shadow: 
+            0 20px 50px rgba(74, 64, 58, 0.15), /* Sombra difusa */
+            0 1px 3px rgba(0,0,0,0.05); /* Definição de borda */
+        display: flex;
+        max-width: 900px;
+        width: 100%;
+        min-height: 550px;
+    }
+
+    /* LADO ESQUERDO: A CAPA (CONTRASTE) */
+    .auth-cover {
+        background-color: #4A403A; /* Cor de couro escuro */
+        width: 45%;
+        padding: 60px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        color: #C0A080; /* Dourado suave */
+        position: relative;
+        background-image: radial-gradient(circle at top right, rgba(255,255,255,0.05) 0%, transparent 20%);
+    }
+
+    /* Linha decorativa vertical */
+    .auth-cover::after {
+        content: '';
+        position: absolute;
+        top: 40px; bottom: 40px; left: 40px;
+        width: 1px;
+        background: rgba(192, 160, 128, 0.3);
+    }
+
+    .quote {
+        font-family: 'Lora', serif;
+        font-style: italic;
+        font-size: 1.5rem;
+        line-height: 1.4;
+        color: #fdfbf7;
+    }
+
+    /* LADO DIREITO: O FORMULÁRIO */
+    .auth-form-side {
+        width: 55%;
+        padding: 60px;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .input-group-text {
+        background: transparent;
+        border-right: none;
+        border-color: #e0e0e0;
+        color: var(--text-muted);
+    }
+    
+    .form-control {
+        border-left: none;
+        border-color: #e0e0e0;
+        padding-left: 0;
+    }
+    
+    .form-control:focus {
+        box-shadow: none;
+        border-color: var(--accent);
+    }
+    
+    .input-group:focus-within .input-group-text {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    /* Responsividade para celular */
+    @media (max-width: 768px) {
+        .auth-card { flex-direction: column; }
+        .auth-cover { width: 100%; padding: 40px; min-height: 200px; }
+        .auth-cover::after { display: none; }
+        .auth-form-side { width: 100%; padding: 40px 30px; }
+    }
+</style>
+
+<div class="login-container">
+    <div class="auth-card">
+        
+        <div class="auth-cover">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fas fa-feather-alt fa-2x"></i>
+                <span class="fw-bold" style="letter-spacing: 2px;">LIFETRACKER</span>
+            </div>
+
+            <div class="quote mt-4 ps-4">
+                "A vida não examinada não vale a pena ser vivida."
+                <div class="mt-3 fs-6 text-muted">— Sócrates</div>
+            </div>
+
+            <div class="small opacity-50 ps-4">v2.0 • Edição Digital</div>
+        </div>
+
+        <div class="auth-form-side">
+            <h2 class="fw-bold mb-1" style="font-family: 'Lora', serif; color: var(--text-main);">Bem-vindo de volta</h2>
+            <p class="text-muted mb-5">Continue escrevendo sua história.</p>
+
+            <form method="POST">
+                <div class="mb-4">
+                    <label class="form-label small text-uppercase fw-bold text-muted" style="font-size: 0.7rem;">Usuário</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" name="username" class="form-control" placeholder="Seu nome" required>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label small text-uppercase fw-bold text-muted" style="font-size: 0.7rem;">Senha</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-custom w-100 py-3 shadow-sm mb-4">
+                    Abrir meu Diário
+                </button>
+            </form>
+
+            <div class="text-center border-top pt-4">
+                <small class="text-muted">Ainda não tem um diário?</small>
+                <a href="/cadastro" class="text-decoration-none fw-bold ms-1" style="color: var(--accent);">Começar agora</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

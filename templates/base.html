@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>LifeTracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* --- CONFIGURAÇÃO DE CORES GLOBAIS --- */
+            --bg-mesa: #efebe4;       /* Cor de fundo (mesa) */
+            --bg-papel: #fdfbf7;      /* Cor da folha */
+            --text-main: #4A403A;
+            --text-muted: #8D7B68;
+            --accent: #C0A080;
+            --sidebar-width: 260px;
+
+            /* --- PALETA DE HUMOR (CORES EXATAS) --- */
+            --mood-muito-feliz: #E6C229; 
+            --mood-satisfeito: #F4A261;
+            --mood-mediano: #D4C5B0;
+            --mood-doente: #8DA399;
+            --mood-ansioso: #CD5D67;
+            --mood-triste: #4A5859;
+            --mood-vazio: #E9ECEF;
+        }
+
+        body {
+            background-color: var(--bg-mesa);
+            color: var(--text-main);
+            font-family: 'Nunito', sans-serif;
+            overflow-x: hidden;
+            /* Perspectiva aumentada para valorizar a animação lenta */
+            perspective: 2000px; 
+        }
+
+        /* --- ANIMAÇÃO DE VIRAR A PÁGINA (SLOW MOTION) --- */
+        @keyframes turnPage {
+            0% {
+                opacity: 0;
+                transform: rotateY(-12deg) translateX(-30px);
+                filter: blur(2px);
+            }
+            100% {
+                opacity: 1;
+                transform: rotateY(0) translateX(0);
+                filter: blur(0);
+            }
+        }
+
+        .page-transition {
+            /* AQUI ESTÁ A ALTERAÇÃO: 1.5s para ser bem lento e elegante */
+            animation: turnPage 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            
+            background: var(--bg-papel);
+            min-height: 95vh;
+            margin: 20px 20px 20px var(--sidebar-width);
+            border-radius: 20px;
+            
+            /* Sombra profunda para dar realismo ao papel */
+            box-shadow: 
+                -2px 0 15px rgba(0,0,0,0.02), 
+                15px 15px 40px rgba(74, 64, 58, 0.1);
+            
+            padding: 50px 60px;
+            transform-style: preserve-3d;
+        }
+
+        .page-transition.full-center { margin: 20px auto; max-width: 1000px; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width); height: 100vh; position: fixed;
+            padding: 40px 25px; display: flex; flex-direction: column; z-index: 100;
+        }
+        .brand {
+            font-family: 'Lora', serif; font-size: 1.6rem; font-weight: 700;
+            color: var(--text-main); margin-bottom: 40px; display: flex; align-items: center; gap: 10px;
+        }
+        .nav-link {
+            color: var(--text-muted); font-weight: 600; padding: 12px 20px;
+            border-radius: 12px; transition: 0.3s; margin-bottom: 8px; display: flex; align-items: center; gap: 12px;
+        }
+        .nav-link:hover { background-color: rgba(255,255,255,0.6); color: var(--text-main); transform: translateX(5px); }
+        .nav-link.active { background-color: white; color: var(--accent); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
+        /* --- COMPONENTES --- */
+        .custom-card {
+            background: white; border-radius: 16px; padding: 25px;
+            border: 1px solid rgba(0,0,0,0.02); box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            transition: 0.3s;
+            opacity: 0; /* JS vai animar a entrada */
+            animation: fadeInUp 0.8s forwards; /* Cards sobem mais devagar também */
+        }
+        .custom-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(192, 160, 128, 0.15); }
+
+        .btn-custom {
+            background-color: var(--text-main); color: white; border-radius: 30px;
+            padding: 10px 30px; border: none; font-weight: 600; transition: 0.3s;
+        }
+        .btn-custom:hover { background-color: var(--accent); transform: translateY(-2px); }
+
+        .form-control, .form-select {
+            border-radius: 12px; border: 2px solid #f0f0f0; padding: 12px; background-color: #fafafa;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: white; border-color: var(--accent); box-shadow: none;
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Classes CSS Auxiliares para Cores */
+        .bg-muito-feliz { background-color: var(--mood-muito-feliz) !important; color: white; }
+        .bg-satisfeito { background-color: var(--mood-satisfeito) !important; color: white; }
+        .bg-mediano { background-color: var(--mood-mediano) !important; color: var(--text-main); }
+        .bg-doente { background-color: var(--mood-doente) !important; color: white; }
+        .bg-ansioso { background-color: var(--mood-ansioso) !important; color: white; }
+        .bg-triste { background-color: var(--mood-triste) !important; color: white; }
+
+    </style>
+</head>
+<body>
+
+    {% if current_user.is_authenticated %}
+    <nav class="sidebar">
+        <div class="brand"><i class="fas fa-feather-alt"></i> LifeTracker</div>
+        <div class="nav flex-column">
+            <small class="text-uppercase text-muted fw-bold mb-2 ms-3" style="font-size: 0.7rem;">Menu</small>
+            <a href="/dashboard" class="nav-link"><i class="fas fa-home"></i> Início</a>
+            <a href="/adicionar" class="nav-link"><i class="fas fa-pen-nib"></i> Escrever</a>
+            
+            <small class="text-uppercase text-muted fw-bold mb-2 ms-3 mt-4" style="font-size: 0.7rem;">Álbuns</small>
+            {% for tag in sidebar_tags %}
+                <a href="/dashboard?tag_id={{ tag.id }}" class="nav-link">
+                    <i class="fas fa-bookmark" style="color: var(--accent);"></i> {{ tag.nome }}
+                </a>
+            {% else %}
+                <span class="ms-3 small text-muted fst-italic">Nenhum álbum.</span>
+            {% endfor %}
+
+            <div class="mt-auto">
+                <a href="/perfil" class="nav-link"><i class="fas fa-user-circle"></i> Perfil</a>
+                <a href="/logout" class="nav-link text-danger"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <div class="page-transition {% if not current_user.is_authenticated %}full-center{% endif %}">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}{% for category, message in messages %}
+                <div class="alert alert-{{ category }} shadow-sm rounded-4 mb-4">{{ message }}</div>
+            {% endfor %}{% endif %}
+        {% endwith %}
+        {% block conteudo %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) { return new bootstrap.Tooltip(tooltipTriggerEl) })
+
+        // Animação apenas nos CARDS, não nos pixels
+        document.addEventListener("DOMContentLoaded", function() {
+            const elements = document.querySelectorAll('.custom-card'); 
+            elements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.1}s`; 
+                el.style.opacity = "0";
+                el.style.animation = `fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards ${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>

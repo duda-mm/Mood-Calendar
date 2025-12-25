@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<div class="card shadow border-danger">
+    <div class="card-header bg-danger text-white"><h4>🕵️ Painel Administrativo</h4></div>
+    <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+            <thead class="table-dark"><tr><th>Usuário</th><th>Data</th><th>Nota</th><th>Conteúdo</th></tr></thead>
+            <tbody>
+                {% for entrada in entradas %}
+                <tr>
+                    <td class="fw-bold">{{ entrada.autor.username }}</td>
+                    <td>{{ entrada.data_registro.strftime('%d/%m') }}</td>
+                    <td>{{ entrada.nota_dia }}</td>
+                    <td>
+                        <details><summary class="text-primary" style="cursor:pointer">Ler</summary>
+                        <div class="mt-2 p-2 bg-white border rounded">{{ entrada.descricao }}<br>
+                        {% if entrada.musica_dia %}<small>🎵 {{ entrada.musica_dia }}</small>{% endif %}</div></details>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

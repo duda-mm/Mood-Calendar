@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<style>
+    /* Estilo dos Botões de Rádio Coloridos */
+    .mood-selector input[type="radio"] { display: none; }
+    .mood-selector label {
+        display: inline-block;
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: transform 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .mood-selector label:hover { transform: scale(1.1); }
+    .mood-selector input[type="radio"]:checked + label {
+        border-color: #4A403A; /* Borda escura quando selecionado */
+        transform: scale(1.2);
+    }
+</style>
+
+<div class="row justify-content-center animate-in">
+    <div class="col-md-8">
+        <div class="custom-card">
+            <h4 class="mb-4 fw-bold">{% if editando %}✏️ Editar{% else %}✍️ Nova Memória{% endif %}</h4>
+            
+            <form method="POST">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted">DATA</label>
+                        <input type="date" name="data" class="form-control" required value="{{ entrada.data_registro if editando else '' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted">NOTA (1-5 ESTRELAS)</label>
+                        <input type="range" name="nota" class="form-range" min="1" max="5" value="{{ entrada.nota_dia if editando else 3 }}">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-muted d-block">COMO VOCÊ SE SENTIU? (COR DA LEGENDA)</label>
+                    <div class="mood-selector d-flex align-items-center flex-wrap gap-2">
+                        
+                        <input type="radio" name="humor_cor" id="m1" value="muito-feliz" {% if editando and entrada.humor_cor == 'muito-feliz' %}checked{% endif %} required>
+                        <label for="m1" style="background-color: var(--mood-muito-feliz);" data-bs-toggle="tooltip" title="Muito Feliz! Motivado!"></label>
+
+                        <input type="radio" name="humor_cor" id="m2" value="satisfeito" {% if editando and entrada.humor_cor == 'satisfeito' %}checked{% endif %}>
+                        <label for="m2" style="background-color: var(--mood-satisfeito);" data-bs-toggle="tooltip" title="Satisfeito! Feliz!"></label>
+
+                        <input type="radio" name="humor_cor" id="m3" value="mediano" {% if not editando %}checked{% endif %} {% if editando and entrada.humor_cor == 'mediano' %}checked{% endif %}>
+                        <label for="m3" style="background-color: var(--mood-mediano);" data-bs-toggle="tooltip" title="Mediano! Rotineiro!"></label>
+
+                        <input type="radio" name="humor_cor" id="m4" value="doente" {% if editando and entrada.humor_cor == 'doente' %}checked{% endif %}>
+                        <label for="m4" style="background-color: var(--mood-doente);" data-bs-toggle="tooltip" title="Doente! Preguiçoso!"></label>
+
+                        <input type="radio" name="humor_cor" id="m5" value="ansioso" {% if editando and entrada.humor_cor == 'ansioso' %}checked{% endif %}>
+                        <label for="m5" style="background-color: var(--mood-ansioso);" data-bs-toggle="tooltip" title="Ansioso! Irritado!"></label>
+
+                        <input type="radio" name="humor_cor" id="m6" value="triste" {% if editando and entrada.humor_cor == 'triste' %}checked{% endif %}>
+                        <label for="m6" style="background-color: var(--mood-triste);" data-bs-toggle="tooltip" title="Frustrado! Triste!"></label>
+                    </div>
+                </div>
+
+                <div class="mb-4 p-3 bg-light rounded-3">
+                    <label class="form-label fw-bold small text-muted"><i class="fas fa-folder-open"></i> GUARDAR NO ÁLBUM (TAG)</label>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <select name="tag_existente" class="form-select">
+                                <option value="" selected>Sem Álbum</option>
+                                {% for tag in sidebar_tags %}
+                                    <option value="{{ tag.id }}" {% if editando and entrada.tag_id == tag.id %}selected{% endif %}>{{ tag.nome }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text small">Escolha um existente...</div>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="nova_tag" class="form-control" placeholder="Ou crie: ex. 'Viagem 2024'">
+                            <div class="form-text small">...ou crie um novo aqui.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-muted">MÚSICA</label>
+                    <input type="text" name="musica" class="form-control" placeholder="Ex: Coldplay - Yellow" value="{{ entrada.musica_dia if editando else '' }}">
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-muted">DESCRIÇÃO</label>
+                    <textarea name="descricao" class="form-control" rows="5" required>{{ entrada.descricao if editando else '' }}</textarea>
+                </div>
+
+                <button type="submit" class="btn btn-custom w-100 py-2">Salvar no Diário</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

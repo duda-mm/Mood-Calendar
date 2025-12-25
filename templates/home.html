@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    /* --- CORREÇÃO DE ALINHAMENTO (CENTRALIZAÇÃO PERFEITA) --- */
+    
+    /* Sobrescreve a classe .page-transition do base.html APENAS nesta página */
+    .page-transition {
+        /* Remove estilo de papel */
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        
+        /* Força tela cheia ignorando sidebar */
+        width: 100vw !important;
+        height: 100vh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+        
+        /* Fixa na tela para garantir zero interferência */
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        
+        /* Centralização Flexbox Absoluta */
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-container {
+        text-align: center;
+        position: relative;
+        z-index: 10;
+        padding: 20px;
+    }
+
+    /* --- ESTILOS VISUAIS --- */
+
+    /* Título Gigante */
+    .hero-title {
+        font-family: 'Lora', serif;
+        font-size: 5rem;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: -2px;
+        margin-bottom: 10px;
+        line-height: 1;
+        background: -webkit-linear-gradient(45deg, #4A403A, #6b5b52);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+        font-family: 'Nunito', sans-serif;
+        font-size: 1.3rem;
+        color: var(--text-muted);
+        font-weight: 300;
+        letter-spacing: 1px;
+        margin-bottom: 50px;
+        line-height: 1.6;
+    }
+
+    /* Ícone Flutuante */
+    .floating-icon {
+        font-size: 4rem;
+        color: var(--accent);
+        margin-bottom: 30px;
+        display: inline-block;
+        animation: float 6s ease-in-out infinite;
+        filter: drop-shadow(0 10px 15px rgba(192, 160, 128, 0.3));
+    }
+
+    /* Botões */
+    .btn-hero-primary {
+        background-color: var(--text-main);
+        color: white;
+        padding: 15px 50px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 10px 20px rgba(74, 64, 58, 0.2);
+        border: 2px solid var(--text-main);
+    }
+
+    .btn-hero-primary:hover {
+        background-color: var(--accent);
+        border-color: var(--accent);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(192, 160, 128, 0.3);
+    }
+
+    .btn-hero-outline {
+        background-color: transparent;
+        color: var(--text-main);
+        padding: 15px 50px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border: 2px solid rgba(74, 64, 58, 0.2);
+        transition: 0.3s;
+        margin-left: 15px;
+    }
+
+    .btn-hero-outline:hover {
+        border-color: var(--text-main);
+        background-color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Elementos Decorativos de Fundo */
+    .bg-decoration {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        z-index: -1;
+        opacity: 0.6;
+    }
+    .blob-1 { top: 10%; left: 10%; width: 400px; height: 400px; background: #ebdccb; }
+    .blob-2 { bottom: 10%; right: 10%; width: 500px; height: 500px; background: #e0d4c5; }
+
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    /* Animação de Entrada */
+    .fade-up { opacity: 0; animation: fadeInUpContent 1s forwards 0.5s; }
+    .fade-up-delay { opacity: 0; animation: fadeInUpContent 1s forwards 0.8s; }
+    
+    @keyframes fadeInUpContent {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+        .hero-title { font-size: 3.5rem; }
+        .btn-hero-outline { margin-left: 0; margin-top: 15px; display: block; width: 100%; }
+        .btn-hero-primary { display: block; width: 100%; }
+    }
+</style>
+
+<div class="bg-decoration blob-1"></div>
+<div class="bg-decoration blob-2"></div>
+
+<div class="hero-container">
+    <div class="floating-icon">
+        <i class="fas fa-feather-alt"></i>
+    </div>
+
+    <h1 class="hero-title fade-up">LifeTracker</h1>
+    <p class="hero-subtitle fade-up">
+        Minimalismo para a sua mente.<br>
+        Organize seus dias, sentimentos e memórias.
+    </p>
+
+    <div class="fade-up-delay">
+        <a href="/cadastro" class="btn btn-hero-primary text-decoration-none">
+            Começar Jornada
+        </a>
+        <a href="/login" class="btn btn-hero-outline text-decoration-none">
+            Já tenho conta
+        </a>
+    </div>
+</div>
+{% endblock %}

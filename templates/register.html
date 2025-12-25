@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    /* Reutilizando os estilos para consistência */
+    .login-container {
+        display: flex; align-items: center; justify-content: center; min-height: 80vh;
+    }
+    .auth-card {
+        background-color: white; border-radius: 24px; overflow: hidden;
+        box-shadow: 0 20px 50px rgba(74, 64, 58, 0.15), 0 1px 3px rgba(0,0,0,0.05);
+        display: flex; max-width: 900px; width: 100%; min-height: 600px;
+    }
+    .auth-cover {
+        background-color: #8D7B68; /* Tom mais claro para cadastro (Argila/Terra) */
+        width: 45%; padding: 60px 40px; display: flex; flex-direction: column;
+        justify-content: space-between; color: white; position: relative;
+        background-image: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, transparent 100%);
+    }
+    .auth-cover::after {
+        content: ''; position: absolute; top: 40px; bottom: 40px; left: 40px;
+        width: 1px; background: rgba(255, 255, 255, 0.2);
+    }
+    .quote {
+        font-family: 'Lora', serif; font-style: italic; font-size: 1.5rem; line-height: 1.4;
+    }
+    .auth-form-side {
+        width: 55%; padding: 60px; background-color: #fff;
+        display: flex; flex-direction: column; justify-content: center;
+    }
+    .input-group-text { background: transparent; border-right: none; border-color: #e0e0e0; color: #8D7B68; }
+    .form-control { border-left: none; border-color: #e0e0e0; padding-left: 0; }
+    .form-control:focus { box-shadow: none; border-color: #8D7B68; }
+    .input-group:focus-within .input-group-text { border-color: #8D7B68; color: #8D7B68; }
+    
+    @media (max-width: 768px) {
+        .auth-card { flex-direction: column; }
+        .auth-cover { width: 100%; padding: 40px; min-height: 200px; }
+        .auth-cover::after { display: none; }
+        .auth-form-side { width: 100%; padding: 40px 30px; }
+    }
+</style>
+
+<div class="login-container">
+    <div class="auth-card">
+        
+        <div class="auth-cover">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fas fa-book-medical fa-2x"></i>
+                <span class="fw-bold" style="letter-spacing: 2px;">NOVO CAPÍTULO</span>
+            </div>
+
+            <div class="quote mt-4 ps-4">
+                "O começo é a parte mais importante do trabalho."
+                <div class="mt-3 fs-6 opacity-75">— Platão</div>
+            </div>
+
+            <div class="small opacity-50 ps-4">Junte-se a nós</div>
+        </div>
+
+        <div class="auth-form-side">
+            <h2 class="fw-bold mb-1" style="font-family: 'Lora', serif; color: var(--text-main);">Criar Conta</h2>
+            <p class="text-muted mb-4">Comece a registrar seus momentos hoje.</p>
+
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label small text-uppercase fw-bold text-muted" style="font-size: 0.7rem;">Nome de Usuário</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                        <input type="text" name="username" class="form-control" placeholder="Como quer ser chamado?" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small text-uppercase fw-bold text-muted" style="font-size: 0.7rem;">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input type="email" name="email" class="form-control" placeholder="seu@email.com" required>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label small text-uppercase fw-bold text-muted" style="font-size: 0.7rem;">Senha Secreta</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        <input type="password" name="password" class="form-control" placeholder="Crie uma senha" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-custom w-100 py-3 shadow-sm mb-4" style="background-color: #8D7B68;">
+                    Finalizar Cadastro
+                </button>
+            </form>
+
+            <div class="text-center border-top pt-4">
+                <small class="text-muted">Já tem uma conta?</small>
+                <a href="/login" class="text-decoration-none fw-bold ms-1" style="color: #8D7B68;">Entrar</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
