@@ -10,6 +10,56 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
+        /* 🔹 AJUSTES EXCLUSIVOS PARA MOBILE */
+        @media (max-width: 768px) {
+
+            body { overflow-y: auto; }
+
+            .sidebar { display: none; }
+
+            .page-transition {
+                margin: 0 !important;
+                border-radius: 0;
+                padding: 25px 18px;
+                min-height: 100vh;
+            }
+
+            h1, .display-5 { font-size: 1.9rem !important; }
+            h4, h5 { font-size: 1.2rem !important; }
+            p, small { font-size: 0.95rem; }
+
+            .btn-custom {
+                padding: 14px 18px;
+                font-size: 1rem;
+                border-radius: 14px;
+            }
+
+            .custom-card {
+                padding: 18px;
+                border-radius: 14px;
+            }
+
+            .blur-target { filter: none !important; opacity: 1 !important; }
+
+            /* 🔹 Ajuste de grids e colunas */
+            .row > [class^="col"] { width: 100%; }
+
+            /* 🔹 Formulários mais confortáveis no toque */
+            input, textarea, select {
+                font-size: 1rem;
+                padding: 12px 14px;
+            }
+
+            label { font-size: 0.8rem; }
+
+            .border-top { margin-top: 12px; }
+
+            /* 🔹 Botões clicáveis */
+            .btn-sm { padding: 8px 10px !important; }
+
+            /* 🔹 “Ano em Pixels” — layout compacto */
+            .d-grid { gap: 3px !important; }
+        }
         :root {
             --bg-mesa: #efebe4; 
             --bg-papel: #fdfbf7; 
