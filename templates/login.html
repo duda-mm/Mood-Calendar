@@ -2,58 +2,66 @@
 
 {% block conteudo %}
 <style>
-    /* Ajuste específico para centralizar o Login na "mesa" */
+    /* Centralização na tela */
     .login-container {
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 80vh;
+        min-height: 100vh;
+        padding: 20px;
     }
 
     .auth-card {
         background-color: white;
         border-radius: 24px;
-        overflow: hidden; /* Garante que a imagem não saia da borda */
+        overflow: hidden; 
         box-shadow: 
-            0 20px 50px rgba(74, 64, 58, 0.15), /* Sombra difusa */
-            0 1px 3px rgba(0,0,0,0.05); /* Definição de borda */
+            0 20px 50px rgba(74, 64, 58, 0.15), 
+            0 1px 3px rgba(0,0,0,0.05);
         display: flex;
         max-width: 900px;
         width: 100%;
         min-height: 550px;
     }
 
-    /* LADO ESQUERDO: A CAPA (CONTRASTE) */
+    /* --- LADO ESQUERDO (CORRIGIDO) --- */
     .auth-cover {
-        background-color: #4A403A; /* Cor de couro escuro */
+        background-color: #4A403A; 
         width: 45%;
-        padding: 60px 40px;
+        padding: 40px;
+        
+        /* AQUI ESTÁ A MUDANÇA PARA CENTRALIZAR TUDO */
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        color: #C0A080; /* Dourado suave */
+        justify-content: center; /* Centraliza verticalmente */
+        align-items: center;     /* Centraliza horizontalmente */
+        text-align: center;      /* Centraliza o texto */
+        gap: 40px;               /* Espaço entre o logo, a frase e o rodapé */
+        
+        color: #C0A080;
         position: relative;
         background-image: radial-gradient(circle at top right, rgba(255,255,255,0.05) 0%, transparent 20%);
     }
 
-    /* Linha decorativa vertical */
-    .auth-cover::after {
-        content: '';
-        position: absolute;
-        top: 40px; bottom: 40px; left: 40px;
-        width: 1px;
-        background: rgba(192, 160, 128, 0.3);
+    /* Removemos a linha vertical que poderia estar atrapalhando o visual limpo */
+
+    .brand-header {
+        display: flex;
+        flex-direction: column; /* Ícone em cima do texto */
+        align-items: center;
+        gap: 15px;
     }
 
     .quote {
         font-family: 'Lora', serif;
         font-style: italic;
-        font-size: 1.5rem;
-        line-height: 1.4;
+        font-size: 1.3rem;
+        line-height: 1.5;
         color: #fdfbf7;
+        max-width: 80%; /* Para o texto não ficar muito largo */
     }
 
-    /* LADO DIREITO: O FORMULÁRIO */
+    /* LADO DIREITO: FORMULÁRIO */
     .auth-form-side {
         width: 55%;
         padding: 60px;
@@ -63,34 +71,14 @@
         justify-content: center;
     }
 
-    .input-group-text {
-        background: transparent;
-        border-right: none;
-        border-color: #e0e0e0;
-        color: var(--text-muted);
-    }
-    
-    .form-control {
-        border-left: none;
-        border-color: #e0e0e0;
-        padding-left: 0;
-    }
-    
-    .form-control:focus {
-        box-shadow: none;
-        border-color: var(--accent);
-    }
-    
-    .input-group:focus-within .input-group-text {
-        border-color: var(--accent);
-        color: var(--accent);
-    }
+    .input-group-text { background: transparent; border-right: none; border-color: #e0e0e0; color: var(--text-muted); }
+    .form-control { border-left: none; border-color: #e0e0e0; padding-left: 0; }
+    .form-control:focus { box-shadow: none; border-color: var(--accent); }
+    .input-group:focus-within .input-group-text { border-color: var(--accent); color: var(--accent); }
 
-    /* Responsividade para celular */
     @media (max-width: 768px) {
         .auth-card { flex-direction: column; }
-        .auth-cover { width: 100%; padding: 40px; min-height: 200px; }
-        .auth-cover::after { display: none; }
+        .auth-cover { width: 100%; padding: 40px; min-height: 300px; }
         .auth-form-side { width: 100%; padding: 40px 30px; }
     }
 </style>
@@ -99,21 +87,21 @@
     <div class="auth-card">
         
         <div class="auth-cover">
-            <div class="d-flex align-items-center gap-2">
-                <i class="fas fa-feather-alt fa-2x"></i>
-                <span class="fw-bold" style="letter-spacing: 2px;">LIFETRACKER</span>
+            <div class="brand-header">
+                <i class="fas fa-clock fa-3x"></i>
+                <span class="fw-bold fs-4" style="letter-spacing: 3px;">THE NOTEBOOK</span>
             </div>
 
-            <div class="quote mt-4 ps-4">
+            <div class="quote">
                 "A vida não examinada não vale a pena ser vivida."
                 <div class="mt-3 fs-6 text-muted">— Sócrates</div>
             </div>
 
-            <div class="small opacity-50 ps-4">v2.0 • Edição Digital</div>
+            <div class="small opacity-50">As palavras voam, o que é escrito permanece</div>
         </div>
 
         <div class="auth-form-side">
-            <h2 class="fw-bold mb-1" style="font-family: 'Lora', serif; color: var(--text-main);">Bem-vindo de volta</h2>
+            <h2 class="fw-bold mb-1" style="font-family: 'Lora', serif; color: var(--text-main);">Bem-vindo</h2>
             <p class="text-muted mb-5">Continue escrevendo sua história.</p>
 
             <form method="POST">

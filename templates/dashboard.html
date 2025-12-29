@@ -3,27 +3,27 @@
 
 <div class="d-flex justify-content-between align-items-end mb-5">
     <div>
-        <h5 class="text-muted mb-1 fst-italic" style="font-family: 'Lora', serif;">{{ filtro_nome if filtro_nome else 'Meu Diário' }}</h5>
+        
+        
+        <h5 class="text-muted mb-1 fst-italic" style="font-family: 'Lora', serif;">{{ filtro_nome if filtro_nome else 'Minhas Memórias' }}</h5>
         <h1 class="fw-bold display-5" style="color: var(--text-main); font-family: 'Lora', serif;">
             Olá, {{ current_user.username }}
         </h1>
     </div>
     <a href="/adicionar" class="btn btn-custom shadow-lg">
-        <i class="fas fa-plus me-2"></i>Nova Memória
+        <i class="fas fa-plus me-2"></i>Nova
     </a>
 </div>
 
 <div class="custom-card mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="fw-bold m-0"><i class="fas fa-th me-2 text-muted"></i>Pixels do Ano</h5>
-        
+        <h5 class="fw-bold m-0"><i class="fas fa-th me-2 text-muted"></i>Visão Anual</h5>
         <div class="d-flex gap-2">
             <span class="badge bg-triste" title="Triste">:(</span>
             <span class="badge bg-mediano" title="Mediano">:|</span>
             <span class="badge bg-muito-feliz" title="Muito Feliz">:)</span>
         </div>
     </div>
-    
     <div class="d-flex flex-wrap gap-2 justify-content-center">
         {% for mes in range(1, 13) %}
             <div class="d-flex flex-column gap-1">
@@ -32,15 +32,9 @@
                 {% for dia in range(1, 32) %}
                     {% set data_str = '%04d-%02d-%02d' % (ano_atual, mes, dia) %}
                     {% set cor = mapa_humor.get(data_str) %}
-                    
                     <div style="width: 10px; height: 10px; border-radius: 3px; 
-                                background-color: {% if cor %}var(--mood-{{cor}}){% else %}var(--mood-vazio){% endif %}; 
-                                transition: transform 0.2s;" 
-                         title="{{ data_str }}" 
-                         data-bs-toggle="tooltip"
-                         onmouseover="this.style.transform='scale(1.5)'" 
-                         onmouseout="this.style.transform='scale(1)'">
-                    </div>
+                                background-color: {% if cor %}var(--mood-{{cor}}){% else %}var(--mood-vazio){% endif %};" 
+                         title="{{ data_str }}" data-bs-toggle="tooltip"></div>
                 {% endfor %}
                 </div>
             </div>
@@ -48,10 +42,7 @@
     </div>
 </div>
 
-<div class="d-flex align-items-center mb-4 gap-3">
-    <h4 class="fw-bold m-0" style="font-family: 'Lora', serif;">Suas Histórias</h4>
-    <div class="flex-grow-1 border-bottom"></div>
-</div>
+<h4 class="fw-bold mb-4" style="font-family: 'Lora', serif;">Páginas Escritas</h4>
 
 <div class="row">
     {% for entrada in entradas %}
@@ -65,42 +56,56 @@
                         {{ entrada.data_registro.strftime('%d %B, %Y') }}
                     </span>
                     {% if entrada.tag %}
-                    <span class="badge bg-light text-muted mt-1 border fw-normal">
-                        <i class="fas fa-tag me-1"></i>{{ entrada.tag.nome }}
-                    </span>
+                    <span class="badge bg-light text-muted mt-1 border fw-normal"><i class="fas fa-bookmark me-1"></i>{{ entrada.tag.nome }}</span>
                     {% endif %}
                 </div>
                 
-                <div class="dropdown">
-                    <button class="btn btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
-                    <ul class="dropdown-menu border-0 shadow-lg">
-                        <li><a class="dropdown-item" href="/editar/{{ entrada.id }}">Editar</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="/excluir/{{ entrada.id }}">Excluir</a></li>
-                    </ul>
+                <div class="d-flex gap-2">
+                    <a href="/editar/{{ entrada.id }}" class="text-muted btn btn-sm btn-light" title="Editar"><i class="fas fa-pencil-alt"></i></a>
+                    <a href="/excluir/{{ entrada.id }}" class="text-danger btn btn-sm btn-light" title="Excluir" onclick="return confirm('Rasgar esta página?')"><i class="fas fa-trash-alt"></i></a>
                 </div>
             </div>
+
+            {% if entrada.link_musica and 'youtu' in entrada.link_musica %}
+                {% set video_id = entrada.link_musica.split('v=')[-1].split('&')[0] if 'v=' in entrada.link_musica else entrada.link_musica.split('/')[-1] %}
+                <div class="mb-3 d-flex align-items-center gap-3 bg-light p-2 rounded-3">
+                    <img src="https://img.youtube.com/vi/{{ video_id }}/0.jpg" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                    <a href="{{ entrada.link_musica }}" target="_blank" class="text-decoration-none text-dark small fw-bold text-truncate" style="max-width: 200px;">
+                        <i class="fas fa-play-circle me-1 text-danger"></i> {{ entrada.musica_dia or 'Ouvir Música' }}
+                    </a>
+                </div>
+            {% elif entrada.link_musica %}
+                <div class="mb-3">
+                    <a href="{{ entrada.link_musica }}" target="_blank" class="badge bg-light text-dark text-decoration-none border">
+                        <i class="fas fa-external-link-alt me-1"></i> Link da Música
+                    </a>
+                </div>
+            {% elif entrada.musica_dia %}
+                <div class="mb-3 small text-muted"><i class="fas fa-music me-1"></i> {{ entrada.musica_dia }}</div>
+            {% endif %}
 
             <p class="text-secondary mb-4" style="line-height: 1.7; font-family: 'Nunito', sans-serif;">
                 {{ entrada.descricao }}
             </p>
 
-            <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center text-muted small">
-                <span>
-                    {% if entrada.musica_dia %}<i class="fas fa-music me-1"></i> {{ entrada.musica_dia }}{% endif %}
-                </span>
-                <span class="text-warning">
-                    {% for i in range(entrada.nota_dia) %}<i class="fas fa-star"></i>{% endfor %}
-                </span>
+            <div class="mt-auto pt-3 border-top d-flex justify-content-end text-warning small">
+                {% for i in range(entrada.nota_dia) %}<i class="fas fa-star"></i>{% endfor %}
             </div>
         </div>
     </div>
+    
     {% else %}
-    <div class="col-12 text-center py-5 opacity-50">
-        <i class="fas fa-book-open fa-3x mb-3 text-muted"></i>
-        <p>Páginas em branco...</p>
+    <div class="col-12">
+        <div class="text-center py-5">
+            <i class="fas fa-clock fa-4x mb-4" style="color: #dcd6ce;"></i>
+            
+            <h3 class="text-muted fst-italic mb-3" style="font-family: 'Lora', serif;">"O tempo voa..."</h3>
+            <p class="text-muted mb-4">Você ainda não registrou nenhuma memória neste caderno.</p>
+            
+            <a href="/adicionar" class="btn btn-outline-secondary px-4 py-2 rounded-pill shadow-sm">
+                <i class="fas fa-pen-fancy me-2"></i>Escrever primeira página
+            </a>
+        </div>
     </div>
     {% endfor %}
 </div>

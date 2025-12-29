@@ -2,41 +2,80 @@
 
 {% block conteudo %}
 <style>
-    /* Reutilizando os estilos para consistência */
+    /* Centralização na tela */
     .login-container {
-        display: flex; align-items: center; justify-content: center; min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
     }
+
     .auth-card {
-        background-color: white; border-radius: 24px; overflow: hidden;
-        box-shadow: 0 20px 50px rgba(74, 64, 58, 0.15), 0 1px 3px rgba(0,0,0,0.05);
-        display: flex; max-width: 900px; width: 100%; min-height: 600px;
+        background-color: white;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 
+            0 20px 50px rgba(74, 64, 58, 0.15), 
+            0 1px 3px rgba(0,0,0,0.05);
+        display: flex;
+        max-width: 900px;
+        width: 100%;
+        min-height: 600px;
     }
+
+    /* --- LADO ESQUERDO (CORRIGIDO) --- */
     .auth-cover {
-        background-color: #8D7B68; /* Tom mais claro para cadastro (Argila/Terra) */
-        width: 45%; padding: 60px 40px; display: flex; flex-direction: column;
-        justify-content: space-between; color: white; position: relative;
+        background-color: #8D7B68; /* Argila/Terra */
+        width: 45%;
+        padding: 40px;
+        
+        /* CENTRALIZAÇÃO TOTAL */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Vertical */
+        align-items: center;     /* Horizontal */
+        text-align: center;      /* Texto */
+        gap: 40px;               /* Espaçamento interno */
+
+        color: white;
+        position: relative;
         background-image: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, transparent 100%);
     }
-    .auth-cover::after {
-        content: ''; position: absolute; top: 40px; bottom: 40px; left: 40px;
-        width: 1px; background: rgba(255, 255, 255, 0.2);
+
+    .brand-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
     }
+
     .quote {
-        font-family: 'Lora', serif; font-style: italic; font-size: 1.5rem; line-height: 1.4;
+        font-family: 'Lora', serif;
+        font-style: italic;
+        font-size: 1.3rem;
+        line-height: 1.5;
+        max-width: 80%;
     }
+
+    /* LADO DIREITO */
     .auth-form-side {
-        width: 55%; padding: 60px; background-color: #fff;
-        display: flex; flex-direction: column; justify-content: center;
+        width: 55%;
+        padding: 60px;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
+
     .input-group-text { background: transparent; border-right: none; border-color: #e0e0e0; color: #8D7B68; }
     .form-control { border-left: none; border-color: #e0e0e0; padding-left: 0; }
     .form-control:focus { box-shadow: none; border-color: #8D7B68; }
     .input-group:focus-within .input-group-text { border-color: #8D7B68; color: #8D7B68; }
-    
+
     @media (max-width: 768px) {
         .auth-card { flex-direction: column; }
-        .auth-cover { width: 100%; padding: 40px; min-height: 200px; }
-        .auth-cover::after { display: none; }
+        .auth-cover { width: 100%; padding: 40px; min-height: 300px; }
         .auth-form-side { width: 100%; padding: 40px 30px; }
     }
 </style>
@@ -45,17 +84,17 @@
     <div class="auth-card">
         
         <div class="auth-cover">
-            <div class="d-flex align-items-center gap-2">
-                <i class="fas fa-book-medical fa-2x"></i>
-                <span class="fw-bold" style="letter-spacing: 2px;">NOVO CAPÍTULO</span>
+            <div class="brand-header">
+                <i class="fas fa-clock fa-3x"></i>
+                <span class="fw-bold fs-4" style="letter-spacing: 3px;">NOVO CAPÍTULO</span>
             </div>
 
-            <div class="quote mt-4 ps-4">
+            <div class="quote">
                 "O começo é a parte mais importante do trabalho."
                 <div class="mt-3 fs-6 opacity-75">— Platão</div>
             </div>
 
-            <div class="small opacity-50 ps-4">Junte-se a nós</div>
+            <div class="small opacity-50">Junte-se a nós</div>
         </div>
 
         <div class="auth-form-side">
@@ -87,7 +126,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-custom w-100 py-3 shadow-sm mb-4" style="background-color: #8D7B68;">
+                <button type="submit" class="btn btn-custom w-100 py-3 shadow-sm mb-4" style="background-color: #8D7B68; border-color: #8D7B68;">
                     Finalizar Cadastro
                 </button>
             </form>
