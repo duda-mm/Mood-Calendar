@@ -10,63 +10,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-    /* 🔹 MOBILE — TIPOGRAFIA MAIOR E CONSISTENTE */
-    @media (max-width: 768px) {
-
-        /* Layout */
-        .page-transition {
-            margin: 0 !important;
-            border-radius: 0;
-            padding: 28px 20px;
-            min-height: 100vh;
-        }
-
-        /* 🔸 Títulos bem legíveis */
-        h1, .display-5 { font-size: 2.4rem !important; line-height: 1.25; }
-        h2 { font-size: 2rem !important; }
-        h3 { font-size: 1.6rem !important; }
-        h4, h5 { font-size: 1.35rem !important; }
-
-        /* 🔸 Texto base maior */
-        body, p, li, span, div, label, small {
-            font-size: 1.05rem !important;
-            line-height: 1.6;
-        }
-
-        /* 🔸 Inputs / formulários */
-        input, textarea, select {
-            font-size: 1.05rem !important;
-            padding: 14px 14px;
-            border-radius: 12px;
-        }
-
-        label {
-            font-size: 0.9rem !important;
-            letter-spacing: .5px;
-        }
-
-        /* 🔸 Botões mais tocáveis */
-        .btn, .btn-custom {
-            padding: 16px 20px !important;
-            font-size: 1.05rem !important;
-            border-radius: 14px !important;
-        }
-
-        /* 🔸 Cards */
-        .custom-card {
-            padding: 20px !important;
-            border-radius: 16px;
-        }
-
-        /* 🔸 Listas de cards viram coluna única */
-        .row > [class^="col"] {
-            width: 100% !important;
-        }
-
-        /* Evita blur no mobile */
-        .blur-target { filter: none !important; opacity: 1 !important; }
-    }
-    
         :root {
             --bg-mesa: #efebe4; 
             --bg-papel: #fdfbf7; 
@@ -136,6 +79,80 @@
         
         .animate-pulse { animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        
+        /* 🔧 RESPONSIVIDADE REAL PARA TELAS MENORES */
+        @media (max-width: 768px) {
+
+            html, body {
+                font-size: 17px;
+                overflow-x: hidden;
+            }
+
+            /* Remove margens laterais fixas do desktop */
+            .page-transition {
+                margin: 0 !important;
+                padding: 20px 16px !important;
+                border-radius: 0;
+                min-height: 100vh;
+                width: 100%;
+            }
+
+            /* Sidebar só aparece em desktop */
+            .sidebar { display: none !important; }
+
+            /* Colunas passam a ocupar 100% */
+            .row > [class^="col"] {
+                width: 100% !important;
+                max-width: 100%;
+                flex: 0 0 100%;
+            }
+
+            /* Títulos maiores */
+            h1, .display-5 { font-size: 2.2rem !important; }
+            h2 { font-size: 1.7rem !important; }
+            h3, h4 { font-size: 1.35rem !important; }
+
+            /* Texto base confortável */
+            p, span, small, li, label, div {
+                font-size: 1rem !important;
+                line-height: 1.55;
+            }
+
+            /* Cards adaptados para celular */
+            .custom-card {
+                padding: 16px !important;
+                border-radius: 14px;
+            }
+
+            /* Botões acessíveis */
+            .btn, .btn-custom {
+                font-size: 1rem !important;
+                padding: 14px 16px !important;
+                border-radius: 14px;
+            }
+
+            /* Inputs & formulário */
+            input, textarea, select {
+                font-size: 1rem !important;
+                padding: 14px !important;
+                border-radius: 12px;
+            }
+
+            /* “Ano em pixels” — grid compacto */
+            .d-grid {
+                grid-template-columns: repeat(5, 1fr) !important;
+                gap: 4px !important;
+            }
+
+            .d-grid div {
+                width: 10px;
+                height: 10px;
+            }
+
+            /* Evita blur/efeitos que prejudicam mobile */
+            .blur-target { filter: none !important; opacity: 1 !important; }
+        }
+
     </style>
 </head>
 <body>
