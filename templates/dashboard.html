@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block conteudo %}
 
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-5 gap-3">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-5 gap-3 blur-target">
     <div>
         <h5 class="text-muted mb-1 fst-italic" style="font-family: 'Lora', serif;">{{ filtro_nome if filtro_nome else 'Minhas Memórias' }}</h5>
         <h1 class="fw-bold display-5" style="color: var(--text-main); font-family: 'Lora', serif;">
@@ -30,49 +30,56 @@
     </div>
 </div>
 
-<div class="custom-card mb-5">
+<div class="custom-card mb-5 p-4 border-0 blur-target">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="fw-bold m-0"><i class="fas fa-th me-2 text-muted"></i>Visão Anual</h5>
-        <div class="d-flex gap-2">
+        <h5 class="fw-bold m-0" style="font-family: 'Lora', serif;"><i class="fas fa-th me-2 text-muted"></i>Meu Ano em Pixels</h5>
+        <div class="d-flex gap-1">
             <span class="badge bg-triste" title="Triste">:(</span>
             <span class="badge bg-mediano" title="Mediano">:|</span>
             <span class="badge bg-muito-feliz" title="Muito Feliz">:)</span>
         </div>
     </div>
-    <div class="d-flex flex-wrap gap-2 justify-content-center">
+
+    <div class="d-flex flex-nowrap gap-3 overflow-x-auto pb-3 align-items-start" style="scrollbar-width: thin;">
+        {% set nomes_meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'] %}
         {% for mes in range(1, 13) %}
-            <div class="d-flex flex-column gap-1">
-                <span class="text-center text-muted small fw-bold" style="font-size: 0.6rem;">{{ mes }}</span>
-                <div class="d-flex flex-column gap-1">
+        
+        <div class="text-center flex-shrink-0">
+            <small class="d-block text-muted fw-bold mb-2 opacity-50" style="font-size: 0.65rem;">{{ nomes_meses[mes - 1] }}</small>
+            
+            <div class="d-grid justify-content-center" style="grid-template-columns: repeat(6, 1fr); gap: 2px;">
                 {% for dia in range(1, 32) %}
                     {% set data_str = '%04d-%02d-%02d' % (ano_atual, mes, dia) %}
                     {% set cor = mapa_humor.get(data_str) %}
-                    <div style="width: 10px; height: 10px; border-radius: 3px; 
-                                background-color: {% if cor %}var(--mood-{{cor}}){% else %}var(--mood-vazio){% endif %};" 
-                         title="{{ data_str }}" data-bs-toggle="tooltip"></div>
+                    
+                    <div style="width: 10px; height: 10px; border-radius: 2px; 
+                                background-color: {% if cor %}var(--mood-{{cor}}){% else %}#e9ecef{% endif %};" 
+                         data-bs-toggle="tooltip" title="{{ dia }}/{{ mes }}: {{ cor }}">
+                    </div>
                 {% endfor %}
-                </div>
             </div>
+        </div>
         {% endfor %}
     </div>
 </div>
 
-<h4 class="fw-bold mb-4" style="font-family: 'Lora', serif;">Páginas Escritas</h4>
+<h4 class="fw-bold mb-4 blur-target" style="font-family: 'Lora', serif;">Páginas Escritas</h4>
 
 <div class="row">
     {% for entrada in entradas %}
     <div class="col-md-6 mb-4">
         <div class="custom-card h-100 position-relative" 
-             style="border-left: 5px solid var(--mood-{{ entrada.humor_cor if entrada.humor_cor else 'mediano' }});">
+             style="border-left: 5px solid var(--mood-{{ entrada.humor_cor if entrada.humor_cor else 'mediano' }}); cursor: pointer;"
+             onclick="window.location='/editar/{{ entrada.id }}';">
             
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">
                     {{ entrada.data_registro.strftime('%d %B, %Y') }}
                 </span>
                 
-                <div class="d-flex gap-2">
-                    <a href="/editar/{{ entrada.id }}" class="text-muted btn btn-sm btn-light py-0 px-2" title="Editar"><i class="fas fa-pencil-alt small"></i></a>
-                    <a href="/excluir/{{ entrada.id }}" class="text-danger btn btn-sm btn-light py-0 px-2" title="Excluir" onclick="return confirm('Rasgar esta página?')"><i class="fas fa-trash-alt small"></i></a>
+                <div class="d-flex gap-2" style="position: relative; z-index: 5;">
+                    <a href="/editar/{{ entrada.id }}" class="text-muted btn btn-sm btn-light py-0 px-2" title="Editar" onclick="event.stopPropagation();"><i class="fas fa-pencil-alt small"></i></a>
+                    <a href="/excluir/{{ entrada.id }}" class="text-danger btn btn-sm btn-light py-0 px-2" title="Excluir" onclick="event.stopPropagation(); return confirm('Rasgar esta página?')"><i class="fas fa-trash-alt small"></i></a>
                 </div>
             </div>
 
@@ -89,14 +96,14 @@
 
             {% if entrada.link_musica and 'youtu' in entrada.link_musica %}
                 {% set video_id = entrada.link_musica.split('v=')[-1].split('&')[0] if 'v=' in entrada.link_musica else entrada.link_musica.split('/')[-1] %}
-                <div class="mb-3 d-flex align-items-center gap-3 bg-light p-2 rounded-3 border">
+                <div class="mb-3 d-flex align-items-center gap-3 bg-light p-2 rounded-3 border" style="position: relative; z-index: 5;" onclick="event.stopPropagation();">
                     <img src="https://img.youtube.com/vi/{{ video_id }}/0.jpg" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                     <a href="{{ entrada.link_musica }}" target="_blank" class="text-decoration-none text-dark small fw-bold text-truncate" style="max-width: 200px;">
                         <i class="fas fa-play-circle me-1 text-danger"></i> {{ entrada.musica_dia or 'Ouvir Música' }}
                     </a>
                 </div>
             {% elif entrada.link_musica %}
-                <div class="mb-3">
+                <div class="mb-3" style="position: relative; z-index: 5;" onclick="event.stopPropagation();">
                     <a href="{{ entrada.link_musica }}" target="_blank" class="badge bg-light text-dark text-decoration-none border p-2">
                         <i class="fas fa-external-link-alt me-1"></i> Link da Música
                     </a>

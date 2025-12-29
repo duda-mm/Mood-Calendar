@@ -22,6 +22,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    
+    # AQUI ESTÁ O NOME CORRETO DA COLUNA: password_hash
     password_hash = db.Column(db.String(256), nullable=False)
     
     # NOVOS CAMPOS GAMIFICAÇÃO
@@ -34,6 +36,7 @@ class User(UserMixin, db.Model):
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+        
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
@@ -93,12 +96,8 @@ def dashboard():
 @login_required
 def adicionar():
     if request.method == 'POST':
-        # Converte a data do form
         data_form = datetime.strptime(request.form['data'], '%Y-%m-%d').date()
         
-        # ---------------------------------------------------------
-        # 🛑 VERIFICAÇÃO DE DATA DUPLICADA (CÓDIGO NOVO AQUI)
-        # ---------------------------------------------------------
         memoria_existente = Diario.query.filter_by(
             user_id=current_user.id, 
             data_registro=data_form
@@ -107,9 +106,7 @@ def adicionar():
         if memoria_existente:
             flash('Você já escreveu uma memória para este dia! Tente editar a existente no Início.', 'danger')
             return redirect(url_for('adicionar'))
-        # ---------------------------------------------------------
 
-        # --- LÓGICA DA OFENSIVA (DUOLINGO STYLE) ---
         hoje = date.today()
         ontem = hoje - timedelta(days=1)
         
@@ -122,7 +119,6 @@ def adicionar():
             current_user.last_post_date = hoje
             current_user.xp_total = (current_user.xp_total or 0) + 10
 
-        # --- LÓGICA DE TAGS E SALVAMENTO ---
         tag_id_final = None
         if request.form.get('nova_tag'):
             nova_tag = Tag(nome=request.form.get('nova_tag'), user_id=current_user.id)
@@ -156,10 +152,8 @@ def editar(id):
     entrada = Diario.query.get_or_404(id)
     if entrada.user_id != current_user.id: return redirect('/')
     if request.method == 'POST':
-        # Aqui não precisamos verificar duplicidade da mesma forma, 
-        # pois o usuário pode estar mantendo a mesma data da própria entrada que está editando.
         entrada.data_registro = datetime.strptime(request.form['data'], '%Y-%m-%d').date()
-        entrada.titulo = request.form.get('titulo') # Atualiza título
+        entrada.titulo = request.form.get('titulo')
         entrada.descricao = request.form['descricao']
         entrada.nota_dia = int(request.form['nota'])
         entrada.humor_cor = request.form['humor_cor']
@@ -198,13 +192,26 @@ def perfil():
         except: flash('Nome de usuário já existe.', 'danger')
     return render_template('profile.html')
 
+# --- ROTA DE LOGIN CORRIGIDA ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    
     if request.method == 'POST':
-        user = User.query.filter_by(username=request.form['username']).first()
-        if user and user.check_password(request.form['password']):
-            login_user(user); return redirect('/dashboard')
-        flash('Usuário ou senha incorretos.', 'danger')
+        email_informado = request.form.get('email')
+        senha_informada = request.form.get('senha') # Vem do HTML name="senha"
+        
+        usuario = User.query.filter_by(email=email_informado).first()
+
+        # CORREÇÃO APLICADA: usamos 'usuario.password_hash'
+        if usuario and check_password_hash(usuario.password_hash, senha_informada):
+            login_user(usuario)
+            flash('Login realizado com sucesso!', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Email ou senha incorretos.', 'danger')
+            
     return render_template('login.html')
 
 @app.route('/cadastro', methods=['GET', 'POST'])
