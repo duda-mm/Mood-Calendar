@@ -2,6 +2,10 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+
+    <!-- 🔹 ESSENCIAL PARA MOBILE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
     <title>The Notebook</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='clock.png') }}">
     
@@ -39,7 +43,9 @@
             position: relative;
             z-index: 1;
         }
+
         .full-center { margin: 0 !important; padding: 0 !important; background: transparent !important; box-shadow: none !important; min-height: 100vh; }
+
         @keyframes turnPage { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
 
         .sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; padding: 40px 25px; display: flex; flex-direction: column; z-index: 100; transition: filter 0.8s ease, opacity 0.8s ease; }
@@ -49,26 +55,21 @@
         .nav-link:hover { background-color: rgba(255,255,255,0.6); color: var(--text-main); transform: translateX(5px); }
         .nav-link.active { background-color: white; color: var(--accent); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 
-        /* CARDS SEM ZOOM */
         .custom-card { 
             background: white; border-radius: 16px; padding: 25px; border: 1px solid rgba(0,0,0,0.02); box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
             transition: box-shadow 0.3s ease, transform 0.3s ease; 
         }
+
         .custom-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
 
         .btn-custom { background-color: var(--text-main); color: white; border-radius: 30px; border: none; font-weight: 600; transition: 0.3s; position: relative; overflow: hidden; }
         .btn-custom:hover { background-color: var(--accent); transform: translateY(-2px); color: white; }
         
-        /* RIPPLE EFFECT */
         .ripple { position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.4); transform: scale(0); animation: ripple-anim 0.6s linear; pointer-events: none; }
         @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
 
-        /* --- ZEN MODE (Blur CORRETO) --- */
-        /* Apenas sidebar e elementos marcados com blur-target ficam embaçados */
         body.zen-mode .sidebar { filter: blur(8px); opacity: 0.2; pointer-events: none; }
         body.zen-mode .blur-target { filter: blur(5px); opacity: 0.3; transition: all 0.8s ease; }
-        
-        /* Textarea NUNCA borra */
         textarea:focus { box-shadow: 0 0 0 4px rgba(192, 160, 128, 0.15); border-color: var(--accent); outline: none; }
 
         .bg-muito-feliz { background-color: var(--mood-muito-feliz) !important; color: #fff; }
@@ -76,19 +77,15 @@
         .bg-mediano { background-color: var(--mood-mediano) !important; color: var(--text-main); }
         .bg-ansioso { background-color: var(--mood-ansioso) !important; color: #fff; }
         .bg-triste { background-color: var(--mood-triste) !important; color: #fff; }
-        
+
         .animate-pulse { animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        
-        /* 🔧 RESPONSIVIDADE REAL PARA TELAS MENORES */
+
+        /* 🔧 RESPONSIVIDADE GLOBAL — MOBILE */
         @media (max-width: 768px) {
 
-            html, body {
-                font-size: 17px;
-                overflow-x: hidden;
-            }
+            html, body { font-size: 17px; overflow-x: hidden; }
 
-            /* Remove margens laterais fixas do desktop */
             .page-transition {
                 margin: 0 !important;
                 padding: 20px 16px !important;
@@ -97,65 +94,66 @@
                 width: 100%;
             }
 
-            /* Sidebar só aparece em desktop */
-            .sidebar { display: none !important; }
+            .sidebar { display: none; } /* (sem !important — permite abrir via botão) */
 
-            /* Colunas passam a ocupar 100% */
             .row > [class^="col"] {
                 width: 100% !important;
                 max-width: 100%;
                 flex: 0 0 100%;
             }
 
-            /* Títulos maiores */
             h1, .display-5 { font-size: 2.2rem !important; }
             h2 { font-size: 1.7rem !important; }
             h3, h4 { font-size: 1.35rem !important; }
 
-            /* Texto base confortável */
             p, span, small, li, label, div {
                 font-size: 1rem !important;
                 line-height: 1.55;
             }
 
-            /* Cards adaptados para celular */
-            .custom-card {
-                padding: 16px !important;
-                border-radius: 14px;
-            }
+            .custom-card { padding: 16px !important; border-radius: 14px; }
 
-            /* Botões acessíveis */
             .btn, .btn-custom {
                 font-size: 1rem !important;
                 padding: 14px 16px !important;
                 border-radius: 14px;
             }
 
-            /* Inputs & formulário */
             input, textarea, select {
                 font-size: 1rem !important;
                 padding: 14px !important;
                 border-radius: 12px;
             }
 
-            /* “Ano em pixels” — grid compacto */
-            .d-grid {
-                grid-template-columns: repeat(5, 1fr) !important;
-                gap: 4px !important;
-            }
+            .d-grid { grid-template-columns: repeat(5, 1fr) !important; gap: 4px !important; }
+            .d-grid div { width: 10px; height: 10px; }
 
-            .d-grid div {
-                width: 10px;
-                height: 10px;
-            }
-
-            /* Evita blur/efeitos que prejudicam mobile */
             .blur-target { filter: none !important; opacity: 1 !important; }
         }
 
+        /* 🔹 MENU MOBILE DESLIZANTE */
+        @media (max-width: 768px) {
+            #mobile-menu-btn { display: block; }
+            .sidebar {
+                display: block;
+                transform: translateX(-100%);
+                transition: .3s;
+                background: white;
+                box-shadow: 5px 0 20px rgba(0,0,0,.1);
+            }
+            .sidebar.open { transform: translateX(0); }
+        }
     </style>
 </head>
+
 <body>
+
+    <!-- 🔹 Botão Hamburguer -->
+    <button id="mobile-menu-btn" class="btn btn-custom"
+        style="position: fixed; top: 14px; left: 14px; z-index: 2000;">
+        <i class="fas fa-bars"></i>
+    </button>
+
     {% if current_user.is_authenticated and request.path != '/login' and request.path != '/cadastrar' %}
     <nav class="sidebar">
         <div class="brand"><i class="fas fa-clock fa-lg"></i> The Notebook</div>
@@ -163,16 +161,20 @@
             <small class="text-uppercase text-muted fw-bold mb-2 ms-3" style="font-size: 0.7rem;">Menu</small>
             <a href="/dashboard" class="nav-link"><i class="fas fa-home"></i> Início</a>
             <a href="/adicionar" class="nav-link"><i class="fas fa-pen-nib"></i> Escrever</a>
+
             <small class="text-uppercase text-muted fw-bold mb-2 ms-3 mt-4" style="font-size: 0.7rem;">Álbuns</small>
             <div style="max-height: 40vh; overflow-y: auto;">
                 {% if sidebar_tags %}
                     {% for tag in sidebar_tags %}
-                        <a href="/dashboard?tag_id={{ tag.id }}" class="nav-link"><i class="fas fa-bookmark" style="color: var(--accent);"></i> {{ tag.nome }}</a>
+                        <a href="/dashboard?tag_id={{ tag.id }}" class="nav-link">
+                            <i class="fas fa-bookmark" style="color: var(--accent);"></i> {{ tag.nome }}
+                        </a>
                     {% endfor %}
                 {% else %}
                     <span class="ms-3 small text-muted fst-italic">Vazio...</span>
                 {% endif %}
             </div>
+
             <div class="mt-auto">
                 <hr class="text-muted opacity-25">
                 <a href="/perfil" class="nav-link"><i class="fas fa-user-circle"></i> Perfil</a>
@@ -196,34 +198,36 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) { return new bootstrap.Tooltip(tooltipTriggerEl) })
+        var tooltipList = tooltipTriggerList.map(function (el) { return new bootstrap.Tooltip(el) })
 
-        /* Ripple (Efeito Água) */
         document.addEventListener('click', function (e) {
             const target = e.target.closest('.btn-custom') || e.target.closest('.nav-link');
-            if (target) {
-                const circle = document.createElement('span');
-                const diameter = Math.max(target.clientWidth, target.clientHeight);
-                const radius = diameter / 2;
-                const rect = target.getBoundingClientRect();
-                circle.style.width = circle.style.height = `${diameter}px`;
-                circle.style.left = `${e.clientX - rect.left - radius}px`;
-                circle.style.top = `${e.clientY - rect.top - radius}px`;
-                circle.classList.add('ripple');
-                const oldRipple = target.querySelector('.ripple');
-                if (oldRipple) oldRipple.remove();
-                target.appendChild(circle);
-            }
+            if (!target) return;
+            const circle = document.createElement('span');
+            const diameter = Math.max(target.clientWidth, target.clientHeight);
+            const radius = diameter / 2;
+            const rect = target.getBoundingClientRect();
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${e.clientX - rect.left - radius}px`;
+            circle.style.top  = `${e.clientY - rect.top  - radius}px`;
+            circle.classList.add('ripple');
+            target.querySelector('.ripple')?.remove();
+            target.appendChild(circle);
         });
 
-        /* Zen Mode (Ativa o blur apenas quando foca no textarea) */
         const inputs = document.querySelectorAll('textarea');
         inputs.forEach(input => {
             input.addEventListener('focus', () => document.body.classList.add('zen-mode'));
-            input.addEventListener('blur', () => document.body.classList.remove('zen-mode'));
+            input.addEventListener('blur',  () => document.body.classList.remove('zen-mode'));
         });
+
+        /* 🔹 Controle do menu mobile */
+        const btn = document.getElementById("mobile-menu-btn");
+        const sidebar = document.querySelector(".sidebar");
+        if (btn && sidebar) btn.addEventListener("click", () => sidebar.classList.toggle("open"));
     </script>
 </body>
 </html>
