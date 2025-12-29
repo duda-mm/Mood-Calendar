@@ -127,7 +127,12 @@
             outline: none; 
         }
 
-        /* 📱 MOBILE — responsividade sem alterar desktop */
+
+        /* --------------------
+            MOBILE AJUSTES
+        ---------------------*/
+        #mobile-menu-btn { display: none; }
+
         @media (max-width: 768px) {
 
             html, body { font-size: 17px; }
@@ -150,34 +155,24 @@
 
             .sidebar.open { transform: translateX(0); }
 
-            /* Botão hambúrguer só no mobile + só páginas autenticadas */
-            #mobile-menu-btn {
-                display: block;
+            /* Botão hambúrguer — só páginas autenticadas */
+            body.auth #mobile-menu-btn {
+                display: flex !important;
                 position: fixed;
                 top: 14px;
                 left: 14px;
                 z-index: 2000;
+                align-items: center;
+                justify-content: center;
             }
 
-            /* Home pública → não mostra hambúrguer */
-            body:not(.auth) #mobile-menu-btn { display: none !important; }
+            /* Home pública → não aparece */
+            body:not(.auth) #mobile-menu-btn { display:none !important; }
 
-            /* Tipografia e clique confortáveis */
-            h1 { font-size: 2rem !important; }
-            h2 { font-size: 1.6rem !important; }
-            h3,h4 { font-size: 1.3rem !important; }
+            .btn-custom { padding: 14px 18px !important; }
 
-            .btn, .btn-custom { 
-                padding: 14px 16px !important; 
-                font-size: 1rem !important;
-            }
+            input, textarea, select { padding: 14px !important; }
 
-            input, textarea, select {
-                font-size: 1rem !important;
-                padding: 14px !important;
-            }
-
-            /* Logo um pouco maior no mobile */
             .brand i { font-size: 1.6rem !important; }
         }
     </style>
@@ -185,70 +180,79 @@
 
 <body class="{% if current_user.is_authenticated %}auth{% endif %}">
 
-    <!-- Botão hambúrguer (mobile only) -->
-    <button id="mobile-menu-btn" class="btn btn-custom" style="display:none;">
-        <i class="fas fa-bars"></i>
-    </button>
+<!-- Botão hambúrguer (mobile only) -->
+<button id="mobile-menu-btn" class="btn btn-custom">
+    <i class="fas fa-bars"></i>
+</button>
 
-    {% if current_user.is_authenticated and request.path not in ['/login','/cadastrar'] %}
-    <nav class="sidebar">
-        <div class="brand">
-            <i class="fas fa-clock fa-lg"></i> The Notebook
-        </div>
 
-        <div class="nav flex-column h-100">
-            <small class="text-uppercase text-muted fw-bold mb-2 ms-3" style="font-size: .7rem;">Menu</small>
+{% if current_user.is_authenticated and request.path not in ['/login','/cadastrar'] %}
+<nav class="sidebar">
 
-            <a href="/dashboard" class="nav-link"><i class="fas fa-home"></i> Início</a>
-            <a href="/adicionar" class="nav-link"><i class="fas fa-pen-nib"></i> Escrever</a>
-
-            <small class="text-uppercase text-muted fw-bold mb-2 ms-3 mt-4" style="font-size: .7rem;">Álbuns</small>
-
-            <div style="max-height:40vh; overflow-y:auto;">
-                {% if sidebar_tags %}
-                    {% for tag in sidebar_tags %}
-                        <a href="/dashboard?tag_id={{ tag.id }}" class="nav-link">
-                            <i class="fas fa-bookmark" style="color: var(--accent);"></i> {{ tag.nome }}
-                        </a>
-                    {% endfor %}
-                {% else %}
-                    <span class="ms-3 small text-muted fst-italic">Vazio...</span>
-                {% endif %}
-            </div>
-
-            <div class="mt-auto">
-                <hr class="text-muted opacity-25">
-                <a href="/perfil" class="nav-link"><i class="fas fa-user-circle"></i> Perfil</a>
-                <a href="/logout" class="nav-link"><i class="fas fa-sign-out-alt"></i> Sair</a>
-            </div>
-        </div>
-    </nav>
-    {% endif %}
-
-    <div class="page-transition {% if not current_user.is_authenticated or request.path in ['/login','/cadastrar'] %}full-center{% endif %}">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div style="position: fixed; top:20px; right:20px; z-index:10000;">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} shadow-lg rounded-4 mb-2 fade show">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-        {% block conteudo %}{% endblock %}
+    <div class="brand">
+        <i class="fas fa-clock fa-lg"></i> The Notebook
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="nav flex-column h-100">
 
-    <script>
-        const btn = document.getElementById("mobile-menu-btn");
-        const sidebar = document.querySelector(".sidebar");
+        <small class="text-uppercase text-muted fw-bold mb-2 ms-3" style="font-size:.7rem;">Menu</small>
 
-        if (btn && sidebar) {
-            btn.addEventListener("click", () => {
-                sidebar.classList.toggle("open");
-            });
-        }
-    </script>
+        <a href="/dashboard" class="nav-link"><i class="fas fa-home"></i> Início</a>
+        <a href="/adicionar" class="nav-link"><i class="fas fa-pen-nib"></i> Escrever</a>
+
+        <small class="text-uppercase text-muted fw-bold mb-2 ms-3 mt-4" style="font-size:.7rem;">Álbuns</small>
+
+        <div style="max-height:40vh; overflow-y:auto;">
+            {% if sidebar_tags %}
+                {% for tag in sidebar_tags %}
+                <a href="/dashboard?tag_id={{ tag.id }}" class="nav-link">
+                    <i class="fas fa-bookmark" style="color:var(--accent);"></i> {{ tag.nome }}
+                </a>
+                {% endfor %}
+            {% else %}
+                <span class="ms-3 small text-muted fst-italic">Vazio...</span>
+            {% endif %}
+        </div>
+
+        <div class="mt-auto">
+            <hr class="text-muted opacity-25">
+            <a href="/perfil" class="nav-link"><i class="fas fa-user-circle"></i> Perfil</a>
+            <a href="/logout" class="nav-link"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+
+    </div>
+</nav>
+{% endif %}
+
+
+<div class="page-transition {% if not current_user.is_authenticated or request.path in ['/login','/cadastrar'] %}full-center{% endif %}">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div style="position: fixed; top:20px; right:20px; z-index:10000;">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} shadow-lg rounded-4 mb-2">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block conteudo %}{% endblock %}
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const btn = document.getElementById("mobile-menu-btn");
+const sidebar = document.querySelector(".sidebar");
+
+if (btn && sidebar) {
+    btn.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+    });
+}
+</script>
+
 </body>
 </html>
