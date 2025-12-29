@@ -46,13 +46,13 @@
                         <input type="radio" name="humor_cor" id="m1" value="muito-feliz" {% if editando and entrada.humor_cor == 'muito-feliz' %}checked{% endif %} required>
                         <label for="m1" style="background-color: var(--mood-muito-feliz);" title="Muito Feliz"></label>
                         <input type="radio" name="humor_cor" id="m2" value="satisfeito" {% if editando and entrada.humor_cor == 'satisfeito' %}checked{% endif %}>
-                        <label for="m2" style="background-color: var(--mood-satisfeito);" title="Satisfeito"></label>
+                        <label for="m2" style="background-color: var(--mood-satisfeito);" title="Satisfeito/Produtivo"></label>
                         <input type="radio" name="humor_cor" id="m3" value="mediano" {% if not editando %}checked{% endif %} {% if editando and entrada.humor_cor == 'mediano' %}checked{% endif %}>
                         <label for="m3" style="background-color: var(--mood-mediano);" title="Mediano"></label>
                         <input type="radio" name="humor_cor" id="m4" value="doente" {% if editando and entrada.humor_cor == 'doente' %}checked{% endif %}>
-                        <label for="m4" style="background-color: var(--mood-doente);" title="Doente"></label>
+                        <label for="m4" style="background-color: var(--mood-doente);" title="Doente/Cansado"></label>
                         <input type="radio" name="humor_cor" id="m5" value="ansioso" {% if editando and entrada.humor_cor == 'ansioso' %}checked{% endif %}>
-                        <label for="m5" style="background-color: var(--mood-ansioso);" title="Ansioso"></label>
+                        <label for="m5" style="background-color: var(--mood-ansioso);" title="Ansioso/Pensativo"></label>
                         <input type="radio" name="humor_cor" id="m6" value="triste" {% if editando and entrada.humor_cor == 'triste' %}checked{% endif %}>
                         <label for="m6" style="background-color: var(--mood-triste);" title="Triste"></label>
                     </div>

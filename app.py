@@ -2,14 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, date
-from datetime import timedelta
+from datetime import datetime, date, timedelta
 
 app = Flask(__name__)
 app.secret_key = 'segredo_absoluto_the_notebook'
 
+# Configuração do Banco de Dados
 DB_URL = "postgresql://neondb_owner:npg_xfJM2RKW8wVz@ep-divine-block-a45en3kh-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
-
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL.replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -18,7 +17,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# --- MODELOS ---
 # --- MODELOS ---
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,8 +32,6 @@ class User(UserMixin, db.Model):
     diarios = db.relationship('Diario', backref='autor', lazy=True)
     tags = db.relationship('Tag', backref='dono', lazy=True)
     
-    # ... (mantenha os métodos set_password e check_password aqui) ...
-
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
     def check_password(self, password):
@@ -93,37 +89,40 @@ def dashboard():
     mapa_humor = {e.data_registro.strftime('%Y-%m-%d'): e.humor_cor for e in entradas}
     return render_template('dashboard.html', entradas=entradas, mapa_humor=mapa_humor, filtro_nome=filtro_nome, ano_atual=date.today().year)
 
-from datetime import timedelta # <--- ADICIONE ISSO LÁ NO TOPO DOS IMPORTS
-
 @app.route('/adicionar', methods=['GET', 'POST'])
 @login_required
 def adicionar():
     if request.method == 'POST':
+        # Converte a data do form
         data_form = datetime.strptime(request.form['data'], '%Y-%m-%d').date()
         
+        # ---------------------------------------------------------
+        # 🛑 VERIFICAÇÃO DE DATA DUPLICADA (CÓDIGO NOVO AQUI)
+        # ---------------------------------------------------------
+        memoria_existente = Diario.query.filter_by(
+            user_id=current_user.id, 
+            data_registro=data_form
+        ).first()
+
+        if memoria_existente:
+            flash('Você já escreveu uma memória para este dia! Tente editar a existente no Início.', 'danger')
+            return redirect(url_for('adicionar'))
+        # ---------------------------------------------------------
+
         # --- LÓGICA DA OFENSIVA (DUOLINGO STYLE) ---
         hoje = date.today()
         ontem = hoje - timedelta(days=1)
         
-        # Se a data do diário for HOJE (não vale contar pontos por diários antigos)
         if data_form == hoje:
-            # Se o último post foi ontem, aumenta a ofensiva
             if current_user.last_post_date == ontem:
                 current_user.streak += 1
-            # Se o último post NÃO foi hoje (é o primeiro do dia) e nem ontem (quebrou a sequência)
             elif current_user.last_post_date != hoje:
-                current_user.streak = 1 # Reinicia ou começa
+                current_user.streak = 1 
             
-            # Se já postou hoje, não aumenta a streak, mas pode ganhar XP extra por escrever mais
-            
-            # Atualiza a data do último post para hoje
             current_user.last_post_date = hoje
-            
-            # Dá pontos (XP) - Ex: 10 pontos por memória
             current_user.xp_total = (current_user.xp_total or 0) + 10
 
-        # ------------------------------------------
-
+        # --- LÓGICA DE TAGS E SALVAMENTO ---
         tag_id_final = None
         if request.form.get('nova_tag'):
             nova_tag = Tag(nome=request.form.get('nova_tag'), user_id=current_user.id)
@@ -132,12 +131,11 @@ def adicionar():
         elif request.form.get('tag_existente'):
             tag_id_final = int(request.form.get('tag_existente'))
         
-        # Substitua o bloco 'novo = Diario(...)' por este:
         novo = Diario(
             user_id=current_user.id,
             tag_id=tag_id_final,
             data_registro=data_form,
-            titulo=request.form.get('titulo'),  # <--- CAMPO NOVO AQUI
+            titulo=request.form.get('titulo'),
             descricao=request.form['descricao'],
             nota_dia=int(request.form['nota']),
             humor_cor=request.form['humor_cor'],
@@ -158,18 +156,23 @@ def editar(id):
     entrada = Diario.query.get_or_404(id)
     if entrada.user_id != current_user.id: return redirect('/')
     if request.method == 'POST':
+        # Aqui não precisamos verificar duplicidade da mesma forma, 
+        # pois o usuário pode estar mantendo a mesma data da própria entrada que está editando.
         entrada.data_registro = datetime.strptime(request.form['data'], '%Y-%m-%d').date()
+        entrada.titulo = request.form.get('titulo') # Atualiza título
         entrada.descricao = request.form['descricao']
         entrada.nota_dia = int(request.form['nota'])
         entrada.humor_cor = request.form['humor_cor']
         entrada.musica_dia = request.form['musica']
         entrada.link_musica = request.form['link_musica']
+        
         if request.form.get('nova_tag'):
             nt = Tag(nome=request.form.get('nova_tag'), user_id=current_user.id)
             db.session.add(nt); db.session.commit()
             entrada.tag_id = nt.id
         elif request.form.get('tag_existente'):
             entrada.tag_id = int(request.form.get('tag_existente'))
+            
         db.session.commit()
         flash('Memória atualizada!', 'success')
         return redirect('/dashboard')
@@ -204,7 +207,6 @@ def login():
         flash('Usuário ou senha incorretos.', 'danger')
     return render_template('login.html')
 
-# ROTA DE CADASTRO (Aponta para register.html)
 @app.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
     if request.method == 'POST':

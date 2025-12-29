@@ -11,10 +11,36 @@
     
     <style>
         :root {
-            --bg-mesa: #efebe4; --bg-papel: #fdfbf7; --text-main: #4A403A; 
-            --text-muted: #8D7B68; --accent: #C0A080; --sidebar-width: 260px;
-            --mood-muito-feliz: #E6C229; --mood-satisfeito: #F4A261; --mood-mediano: #D4C5B0; 
-            --mood-doente: #8DA399; --mood-ansioso: #CD5D67; --mood-triste: #4A5859; --mood-vazio: #E9ECEF;
+            /* --- CORES BASE DO LAYOUT --- */
+            --bg-mesa: #efebe4; 
+            --bg-papel: #fdfbf7; 
+            --text-main: #4A403A; 
+            --text-muted: #8D7B68; 
+            --accent: #C0A080; 
+            --sidebar-width: 260px;
+
+            /* --- PALETA BASEADA NA IMAGEM (Gradiente Índigo -> Coral) --- */
+            
+            /* 1. Muito Feliz: Ouro Suave (Complementa o rosa do 'Satisfeito') */
+            --mood-muito-feliz: #F2CC8F;
+
+            /* 2. Satisfeito/Produtivo: Vermelho Framboesa (O tom da direita da imagem) */
+            --mood-satisfeito: #D95D6A; 
+
+            /* 3. Mediano: Bege Areia (O centro da imagem, mantido neutro) */
+            --mood-mediano: #CDC7BE; 
+
+            /* 4. Ansioso/Pensativo: Coral Salmão (O tom laranja da imagem) */
+            --mood-ansioso: #FB9F78; 
+
+            /* 5. Cansado/Doente: Azul Pervinca (O tom azul claro da imagem) */
+            --mood-doente: #8875a6; 
+            
+            /* 6. Triste: Índigo Profundo (O tom roxo escuro da esquerda da imagem) */
+            --mood-triste: #4b5b90; 
+
+            /* Cor padrão para dias vazios */
+            --mood-vazio: #E9ECEF;
         }
 
         body { background-color: var(--bg-mesa); color: var(--text-main); font-family: 'Nunito', sans-serif; overflow-x: hidden; }
@@ -61,7 +87,7 @@
         
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Classes de Humor */
+        /* Classes de Humor (Mapeiam as variáveis do :root) */
         .bg-muito-feliz { background-color: var(--mood-muito-feliz) !important; color: white; }
         .bg-satisfeito { background-color: var(--mood-satisfeito) !important; color: white; }
         .bg-mediano { background-color: var(--mood-mediano) !important; color: var(--text-main); }
