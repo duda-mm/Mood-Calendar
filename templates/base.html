@@ -89,17 +89,20 @@ textarea:focus{box-shadow:0 0 0 4px rgba(192,160,128,.15);border-color:var(--acc
     .sidebar{transform:translateX(-100%);background:#fff;box-shadow:6px 0 24px rgba(0,0,0,.18)}
     .sidebar.open{transform:translateX(0)}
 
-    /* HAMBURGUER visibility */
+    /* Button visible only logged in */
     body.auth #mobile-menu-btn{
         display:flex!important;position:fixed;top:14px;left:14px;z-index:2000;
         align-items:center;justify-content:center;padding:12px 14px;gap:10px;
     }
     body:not(.auth) #mobile-menu-btn{display:none!important}
 
-    /* 👉 SPACING BETWEEN HAMBURGER & LOGO */
+    /* 👉 LOGO EM UMA LINHA ABAIXO DO BOTÃO */
     .brand{
-        margin-left:46px;   /* espaço solicitado */
-        gap:12px;
+        margin-left:0;
+        margin-top:58px;   /* distância abaixo do hambúrguer */
+        gap:10px;
+        white-space:nowrap; /* evita quebra em duas linhas */
+        align-items:center;
     }
 
     .btn-custom{padding:14px 18px!important}
