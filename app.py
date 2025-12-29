@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -5,14 +6,27 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, date, timedelta
 
 app = Flask(__name__)
-app.secret_key = 'segredo_absoluto_the_notebook'
 
-# Configuração do Banco de Dados
-DB_URL = "postgresql://neondb_owner:npg_xfJM2RKW8wVz@ep-divine-block-a45en3kh-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
-app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL.replace("postgres://", "postgresql://", 1)
+# --- SEGURANÇA: PEGA AS CHAVES DAS VARIÁVEIS DE AMBIENTE (CONFIGURADAS NO VERCEL) ---
+app.secret_key = os.environ.get('SECRET_KEY', 'chave_padrao_para_teste_local')
+
+# Pega a URL do banco. Se não achar (rodando local), usa uma string vazia ou sqlite para teste
+db_url_env = os.environ.get('DATABASE_URL') 
+
+if db_url_env:
+    # Corrige o problema do 'postgres://' que o Vercel/Render/Heroku usam antigamente
+    if db_url_env.startswith("postgres://"):
+        db_url_env = db_url_env.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url_env
+else:
+    # Fallback para rodar localmente se você não configurar variáveis no PC
+    # (Recomendo não deixar a senha real aqui, mas para teste rápido ok)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///meudiario.db' 
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+# ... O RESTO DO CÓDIGO CONTINUA IGUAL ...
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
