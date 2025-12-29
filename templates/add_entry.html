@@ -23,6 +23,12 @@
             </h4>
             
             <form method="POST">
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-muted small">TÍTULO DA MEMÓRIA</label>
+                    <input type="text" name="titulo" class="form-control" 
+                        placeholder="Como você resume o dia de hoje?" 
+                        value="{{ entrada.titulo if entrada and entrada.titulo else '' }}">
+                </div>
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <label class="form-label fw-bold small text-muted">DATA</label>

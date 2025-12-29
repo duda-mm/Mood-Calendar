@@ -1,18 +1,33 @@
 {% extends "base.html" %}
 {% block conteudo %}
 
-<div class="d-flex justify-content-between align-items-end mb-5">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-5 gap-3">
     <div>
-        
-        
         <h5 class="text-muted mb-1 fst-italic" style="font-family: 'Lora', serif;">{{ filtro_nome if filtro_nome else 'Minhas Memórias' }}</h5>
         <h1 class="fw-bold display-5" style="color: var(--text-main); font-family: 'Lora', serif;">
             Olá, {{ current_user.username }}
         </h1>
     </div>
-    <a href="/adicionar" class="btn btn-custom shadow-lg">
-        <i class="fas fa-plus me-2"></i>Nova
-    </a>
+
+    <div class="d-flex gap-3">
+        <div class="bg-white px-4 py-2 rounded-4 shadow-sm d-flex align-items-center gap-3 border" style="min-width: 140px;">
+            <div class="text-center">
+                {% if current_user.streak > 0 %}
+                    <i class="fas fa-fire fa-2x animate-pulse" style="color: #e67e22; filter: drop-shadow(0 0 5px rgba(230, 126, 34, 0.5));"></i>
+                {% else %}
+                    <i class="fas fa-fire fa-2x text-muted opacity-25"></i>
+                {% endif %}
+            </div>
+            <div>
+                <div class="fw-bold fs-4" style="line-height: 1; color: #4A403A;">{{ current_user.streak }}</div>
+                <div class="text-muted small text-uppercase fw-bold" style="font-size: 0.6rem; letter-spacing: 1px;">Dias Seguidos</div>
+            </div>
+        </div>
+
+        <a href="/adicionar" class="btn btn-custom shadow-lg d-flex align-items-center px-4">
+            <i class="fas fa-plus me-2"></i>Nova
+        </a>
+    </div>
 </div>
 
 <div class="custom-card mb-5">
@@ -50,25 +65,31 @@
         <div class="custom-card h-100 position-relative" 
              style="border-left: 5px solid var(--mood-{{ entrada.humor_cor if entrada.humor_cor else 'mediano' }});">
             
-            <div class="d-flex justify-content-between align-items-start mb-3">
-                <div class="d-flex flex-column">
-                    <span class="fw-bold text-uppercase" style="font-size: 0.8rem; color: var(--accent); letter-spacing: 1px;">
-                        {{ entrada.data_registro.strftime('%d %B, %Y') }}
-                    </span>
-                    {% if entrada.tag %}
-                    <span class="badge bg-light text-muted mt-1 border fw-normal"><i class="fas fa-bookmark me-1"></i>{{ entrada.tag.nome }}</span>
-                    {% endif %}
-                </div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 1px;">
+                    {{ entrada.data_registro.strftime('%d %B, %Y') }}
+                </span>
                 
                 <div class="d-flex gap-2">
-                    <a href="/editar/{{ entrada.id }}" class="text-muted btn btn-sm btn-light" title="Editar"><i class="fas fa-pencil-alt"></i></a>
-                    <a href="/excluir/{{ entrada.id }}" class="text-danger btn btn-sm btn-light" title="Excluir" onclick="return confirm('Rasgar esta página?')"><i class="fas fa-trash-alt"></i></a>
+                    <a href="/editar/{{ entrada.id }}" class="text-muted btn btn-sm btn-light py-0 px-2" title="Editar"><i class="fas fa-pencil-alt small"></i></a>
+                    <a href="/excluir/{{ entrada.id }}" class="text-danger btn btn-sm btn-light py-0 px-2" title="Excluir" onclick="return confirm('Rasgar esta página?')"><i class="fas fa-trash-alt small"></i></a>
                 </div>
             </div>
 
+            <h4 class="fw-bold mb-2" style="font-family: 'Lora', serif; color: #2c3e50; line-height: 1.2;">
+                {{ entrada.titulo if entrada.titulo else 'Sem Título' }}
+            </h4>
+
+            {% if entrada.tag %}
+            <div class="mb-3">
+                <span class="badge bg-light text-muted border fw-normal"><i class="fas fa-bookmark me-1"></i>{{ entrada.tag.nome }}</span>
+            </div>
+            {% else %}
+            <div class="mb-3"></div> {% endif %}
+
             {% if entrada.link_musica and 'youtu' in entrada.link_musica %}
                 {% set video_id = entrada.link_musica.split('v=')[-1].split('&')[0] if 'v=' in entrada.link_musica else entrada.link_musica.split('/')[-1] %}
-                <div class="mb-3 d-flex align-items-center gap-3 bg-light p-2 rounded-3">
+                <div class="mb-3 d-flex align-items-center gap-3 bg-light p-2 rounded-3 border">
                     <img src="https://img.youtube.com/vi/{{ video_id }}/0.jpg" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                     <a href="{{ entrada.link_musica }}" target="_blank" class="text-decoration-none text-dark small fw-bold text-truncate" style="max-width: 200px;">
                         <i class="fas fa-play-circle me-1 text-danger"></i> {{ entrada.musica_dia or 'Ouvir Música' }}
@@ -76,7 +97,7 @@
                 </div>
             {% elif entrada.link_musica %}
                 <div class="mb-3">
-                    <a href="{{ entrada.link_musica }}" target="_blank" class="badge bg-light text-dark text-decoration-none border">
+                    <a href="{{ entrada.link_musica }}" target="_blank" class="badge bg-light text-dark text-decoration-none border p-2">
                         <i class="fas fa-external-link-alt me-1"></i> Link da Música
                     </a>
                 </div>
@@ -84,7 +105,7 @@
                 <div class="mb-3 small text-muted"><i class="fas fa-music me-1"></i> {{ entrada.musica_dia }}</div>
             {% endif %}
 
-            <p class="text-secondary mb-4" style="line-height: 1.7; font-family: 'Nunito', sans-serif;">
+            <p class="text-secondary mb-4" style="line-height: 1.7; font-family: 'Nunito', sans-serif; white-space: pre-line;">
                 {{ entrada.descricao }}
             </p>
 

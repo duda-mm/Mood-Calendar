@@ -19,19 +19,27 @@
 
         body { background-color: var(--bg-mesa); color: var(--text-main); font-family: 'Nunito', sans-serif; overflow-x: hidden; }
 
-        /* Animação de virar página APENAS se não for a home */
+        /* CONFIGURAÇÃO DA PÁGINA (PAPEL) */
         .page-transition { 
             animation: turnPage 1.0s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
             background: var(--bg-papel); 
             min-height: 95vh; 
+            /* Margem esquerda padrão (para quando tem sidebar) */
             margin: 20px 20px 20px var(--sidebar-width); 
             border-radius: 20px; 
             box-shadow: -2px 0 15px rgba(0,0,0,0.02), 15px 15px 40px rgba(74, 64, 58, 0.1); 
             padding: 50px 60px; 
         }
 
-        /* Se for tela cheia (Home/Login), remove margens */
-        .page-transition.full-center { margin: 0; padding: 0; background: transparent; box-shadow: none; min-height: 100vh; }
+        /* CONFIGURAÇÃO PARA TELA CHEIA (LOGIN/CADASTRO) */
+        /* Essa classe remove a margem lateral e o fundo de papel */
+        .full-center { 
+            margin: 0 !important; 
+            padding: 0 !important; 
+            background: transparent !important; 
+            box-shadow: none !important; 
+            min-height: 100vh; 
+        }
 
         @keyframes turnPage { 
             0% { opacity: 0; transform: translateY(20px); } 
@@ -40,7 +48,6 @@
 
         .sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; padding: 40px 25px; display: flex; flex-direction: column; z-index: 100; }
         
-        /* Marca na barra lateral com a imagem */
         .brand { font-family: 'Lora', serif; font-size: 1.4rem; font-weight: 700; color: var(--text-main); margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
         
         .nav-link { color: var(--text-muted); font-weight: 600; padding: 12px 20px; border-radius: 12px; transition: 0.3s; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
@@ -61,11 +68,20 @@
         .bg-doente { background-color: var(--mood-doente) !important; color: white; }
         .bg-ansioso { background-color: var(--mood-ansioso) !important; color: white; }
         .bg-triste { background-color: var(--mood-triste) !important; color: white; }
+    
+        @keyframes pulseFire {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .animate-pulse {
+            animation: pulseFire 2s infinite ease-in-out;
+        }
     </style>
 </head>
 <body>
 
-    {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated and request.path != '/login' and request.path != '/cadastrar' %}
     <nav class="sidebar">
         <div class="brand">
             <i class="fas fa-clock fa-lg"></i>
@@ -79,13 +95,15 @@
             
             <small class="text-uppercase text-muted fw-bold mb-2 ms-3 mt-4" style="font-size: 0.7rem;">Álbuns</small>
             <div style="max-height: 40vh; overflow-y: auto;">
-                {% for tag in sidebar_tags %}
-                    <a href="/dashboard?tag_id={{ tag.id }}" class="nav-link">
-                        <i class="fas fa-bookmark" style="color: var(--accent);"></i> {{ tag.nome }}
-                    </a>
+                {% if sidebar_tags %}
+                    {% for tag in sidebar_tags %}
+                        <a href="/dashboard?tag_id={{ tag.id }}" class="nav-link">
+                            <i class="fas fa-bookmark" style="color: var(--accent);"></i> {{ tag.nome }}
+                        </a>
+                    {% endfor %}
                 {% else %}
                     <span class="ms-3 small text-muted fst-italic">Vazio...</span>
-                {% endfor %}
+                {% endif %}
             </div>
 
             <div class="mt-auto">
@@ -97,7 +115,7 @@
     </nav>
     {% endif %}
 
-    <div class="page-transition {% if not current_user.is_authenticated %}full-center{% endif %}">
+    <div class="page-transition {% if not current_user.is_authenticated or request.path == '/login' or request.path == '/cadastrar' %}full-center{% endif %}">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div style="position: fixed; top: 20px; right: 20px; z-index: 10000;">
