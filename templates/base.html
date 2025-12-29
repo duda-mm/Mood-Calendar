@@ -10,56 +10,63 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        /* 🔹 AJUSTES EXCLUSIVOS PARA MOBILE */
-        @media (max-width: 768px) {
+    /* 🔹 MOBILE — TIPOGRAFIA MAIOR E CONSISTENTE */
+    @media (max-width: 768px) {
 
-            body { overflow-y: auto; }
-
-            .sidebar { display: none; }
-
-            .page-transition {
-                margin: 0 !important;
-                border-radius: 0;
-                padding: 25px 18px;
-                min-height: 100vh;
-            }
-
-            h1, .display-5 { font-size: 1.9rem !important; }
-            h4, h5 { font-size: 1.2rem !important; }
-            p, small { font-size: 0.95rem; }
-
-            .btn-custom {
-                padding: 14px 18px;
-                font-size: 1rem;
-                border-radius: 14px;
-            }
-
-            .custom-card {
-                padding: 18px;
-                border-radius: 14px;
-            }
-
-            .blur-target { filter: none !important; opacity: 1 !important; }
-
-            /* 🔹 Ajuste de grids e colunas */
-            .row > [class^="col"] { width: 100%; }
-
-            /* 🔹 Formulários mais confortáveis no toque */
-            input, textarea, select {
-                font-size: 1rem;
-                padding: 12px 14px;
-            }
-
-            label { font-size: 0.8rem; }
-
-            .border-top { margin-top: 12px; }
-
-            /* 🔹 Botões clicáveis */
-            .btn-sm { padding: 8px 10px !important; }
-
-            /* 🔹 “Ano em Pixels” — layout compacto */
-            .d-grid { gap: 3px !important; }
+        /* Layout */
+        .page-transition {
+            margin: 0 !important;
+            border-radius: 0;
+            padding: 28px 20px;
+            min-height: 100vh;
         }
+
+        /* 🔸 Títulos bem legíveis */
+        h1, .display-5 { font-size: 2.4rem !important; line-height: 1.25; }
+        h2 { font-size: 2rem !important; }
+        h3 { font-size: 1.6rem !important; }
+        h4, h5 { font-size: 1.35rem !important; }
+
+        /* 🔸 Texto base maior */
+        body, p, li, span, div, label, small {
+            font-size: 1.05rem !important;
+            line-height: 1.6;
+        }
+
+        /* 🔸 Inputs / formulários */
+        input, textarea, select {
+            font-size: 1.05rem !important;
+            padding: 14px 14px;
+            border-radius: 12px;
+        }
+
+        label {
+            font-size: 0.9rem !important;
+            letter-spacing: .5px;
+        }
+
+        /* 🔸 Botões mais tocáveis */
+        .btn, .btn-custom {
+            padding: 16px 20px !important;
+            font-size: 1.05rem !important;
+            border-radius: 14px !important;
+        }
+
+        /* 🔸 Cards */
+        .custom-card {
+            padding: 20px !important;
+            border-radius: 16px;
+        }
+
+        /* 🔸 Listas de cards viram coluna única */
+        .row > [class^="col"] {
+            width: 100% !important;
+        }
+
+        /* Evita blur no mobile */
+        .blur-target { filter: none !important; opacity: 1 !important; }
+    }
+    
         :root {
             --bg-mesa: #efebe4; 
             --bg-papel: #fdfbf7; 
