@@ -20,14 +20,9 @@
     --mood-doente:#8875a6; --mood-triste:#4b5b90;
 }
 
-body{
-    background:var(--bg-mesa);
-    color:var(--text-main);
-    font-family:'Nunito',sans-serif;
-    overflow-x:hidden;
-}
+body{background:var(--bg-mesa);color:var(--text-main);font-family:'Nunito',sans-serif;overflow-x:hidden}
 
-/* ▪▪▪ PAGE TRANSITION (RESTORED) ▪▪▪ */
+/* PAGE TRANSITION */
 .page-transition{
     animation:turnPage .8s cubic-bezier(.2,.8,.2,1) forwards;
     background:var(--bg-papel);
@@ -38,169 +33,84 @@ body{
     padding:50px 60px;
     position:relative;
     z-index:1;
-    transition:.4s;
 }
+@keyframes turnPage{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
 
-@keyframes turnPage {from{opacity:0;transform:translateY(25px);}to{opacity:1;transform:translateY(0);}}
-
-/* ▪▪▪ SIDEBAR ▪▪▪ */
+/* SIDEBAR */
 .sidebar{
-    width:var(--sidebar-width);
-    height:100vh;
-    position:fixed;
-    padding:40px 25px;
-    display:flex;
-    flex-direction:column;
-    z-index:100;
+    width:var(--sidebar-width);height:100vh;position:fixed;
+    padding:40px 25px;display:flex;flex-direction:column;z-index:100;
     transition:.35s ease-in-out;
 }
-
 .brand{
-    font-family:'Lora',serif;
-    font-size:1.4rem;
-    font-weight:700;
-    color:var(--text-main);
-    margin-bottom:40px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    transition:.3s;
+    font-family:'Lora',serif;font-size:1.4rem;font-weight:700;
+    color:var(--text-main);margin-bottom:40px;display:flex;align-items:center;gap:10px;
 }
 
+/* NAV */
 .nav-link{
-    color:var(--text-muted);
-    font-weight:600;
-    padding:12px 20px;
-    border-radius:12px;
-    margin-bottom:8px;
-    display:flex;
-    gap:12px;
-    align-items:center;
-    transition:.25s;
+    color:var(--text-muted);font-weight:600;padding:12px 20px;border-radius:12px;
+    margin-bottom:8px;display:flex;gap:12px;align-items:center;transition:.25s;
 }
+.nav-link:hover{background:rgba(255,255,255,.6);color:var(--text-main);transform:translateX(6px)}
+.nav-link.active{background:#fff;color:var(--accent);box-shadow:0 4px 15px rgba(0,0,0,.05)}
 
-.nav-link:hover{
-    background:rgba(255,255,255,.6);
-    color:var(--text-main);
-    transform:translateX(6px);
-}
+/* CARDS */
+.custom-card{background:#fff;border-radius:16px;padding:25px;border:1px solid rgba(0,0,0,.05);box-shadow:0 4px 20px rgba(0,0,0,.04);transition:.3s}
+.custom-card:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 10px 28px rgba(0,0,0,.12)}
 
-.nav-link.active{
-    background:#fff;
-    color:var(--accent);
-    box-shadow:0 4px 15px rgba(0,0,0,.05);
-}
+/* BUTTONS */
+.btn-custom{background:var(--text-main);color:#fff;border-radius:30px;font-weight:600;border:none;transition:.25s;position:relative;overflow:hidden}
+.btn-custom:hover{background:var(--accent);transform:translateY(-2px)}
 
-/* ▪▪▪ CARDS — hover restored ▪▪▪ */
-.custom-card{
-    background:#fff;
-    border-radius:16px;
-    padding:25px;
-    border:1px solid rgba(0,0,0,.05);
-    box-shadow:0 4px 20px rgba(0,0,0,.04);
-    transition:.3s;
-}
-.custom-card:hover{
-    transform:translateY(-3px) scale(1.01);
-    box-shadow:0 10px 28px rgba(0,0,0,.12);
-}
+/* RIPPLE */
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:ripple-anim .6s linear}
+@keyframes ripple-anim{to{transform:scale(4);opacity:0}}
 
-/* ▪▪▪ BUTTONS + RIPPLE EFFECT ▪▪▪ */
-.btn-custom{
-    background:var(--text-main);
-    color:#fff;
-    border-radius:30px;
-    font-weight:600;
-    border:none;
-    transition:.25s;
-    position:relative;
-    overflow:hidden;
-}
-.btn-custom:hover{
-    background:var(--accent);
-    transform:translateY(-2px);
-}
+/* FIRE ANIMATION */
+.animate-pulse{animation:pulse 2s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
 
-.ripple{
-    position:absolute;
-    border-radius:50%;
-    background:rgba(255,255,255,.45);
-    transform:scale(0);
-    animation:ripple-anim .6s linear;
-    pointer-events:none;
-}
-@keyframes ripple-anim{to{transform:scale(4);opacity:0;}}
-
-/* ▪▪▪ STREAK FIRE ANIMATION ▪▪▪ */
-.animate-pulse{animation:pulse 2s infinite;}
-@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.12);}100%{transform:scale(1);}}
-
-/* ▪▪▪ ZEN MODE blur (kept) ▪▪▪ */
+/* ZEN MODE */
 body.zen-mode .sidebar,
-body.zen-mode .blur-target{
-    filter:blur(6px);
-    opacity:.35;
-    transition:.4s;
-}
+body.zen-mode .blur-target{filter:blur(6px);opacity:.35;transition:.4s}
+textarea:focus{box-shadow:0 0 0 4px rgba(192,160,128,.15);border-color:var(--accent)}
 
-textarea:focus{
-    box-shadow:0 0 0 4px rgba(192,160,128,.15);
-    border-color:var(--accent);
-}
+/* HAMBURGER default */
+#mobile-menu-btn{display:none}
 
-/* ▪▪▪ HAMBURGER (spaced from logo) ▪▪▪ */
-#mobile-menu-btn{
-    display:none;
-}
-
-/* ▪▪▪ MOBILE RESPONSIVE ▪▪▪ */
+/* ------------------ MOBILE ------------------ */
 @media(max-width:768px){
 
-    html,body{font-size:17px;}
+    html,body{font-size:17px}
 
-    .page-transition{
-        margin:0!important;
-        padding:20px 18px!important;
-        border-radius:0;
-        width:100%;
-    }
+    .page-transition{margin:0!important;padding:20px 18px!important;border-radius:0;width:100%}
 
-    /* sidebar turns into drawer */
-    .sidebar{
-        transform:translateX(-100%);
-        background:#fff;
-        box-shadow:6px 0 24px rgba(0,0,0,.18);
-    }
-    .sidebar.open{transform:translateX(0);}
+    .sidebar{transform:translateX(-100%);background:#fff;box-shadow:6px 0 24px rgba(0,0,0,.18)}
+    .sidebar.open{transform:translateX(0)}
 
-    /* hamburger visible only when logged in */
+    /* HAMBURGUER visibility */
     body.auth #mobile-menu-btn{
-        display:flex!important;
-        position:fixed;
-        top:14px;
-        left:14px;
-        z-index:2000;
-        align-items:center;
-        justify-content:center;
-        padding:12px 14px;
-        gap:10px; /* <-- espaçamento do pedido */
+        display:flex!important;position:fixed;top:14px;left:14px;z-index:2000;
+        align-items:center;justify-content:center;padding:12px 14px;gap:10px;
+    }
+    body:not(.auth) #mobile-menu-btn{display:none!important}
+
+    /* 👉 SPACING BETWEEN HAMBURGER & LOGO */
+    .brand{
+        margin-left:46px;   /* espaço solicitado */
+        gap:12px;
     }
 
-    /* spacing from logo */
-    .brand{ margin-left:6px; }
-
-    body:not(.auth) #mobile-menu-btn{display:none!important;}
-
-    .btn-custom{padding:14px 18px!important;}
-    input,textarea,select{padding:14px!important;}
-    .brand i{font-size:1.6rem!important;}
+    .btn-custom{padding:14px 18px!important}
+    input,textarea,select{padding:14px!important}
+    .brand i{font-size:1.6rem!important}
 }
 </style>
 </head>
 
 <body class="{% if current_user.is_authenticated %}auth{% endif %}">
 
-<!-- HAMBURGER -->
 <button id="mobile-menu-btn" class="btn btn-custom">
   <i class="fas fa-bars"></i>
 </button>
@@ -258,17 +168,16 @@ textarea:focus{
 <script>
 /* ripple */
 document.addEventListener("click",e=>{
- const target=e.target.closest(".btn-custom,.nav-link");
- if(!target)return;
- const circle=document.createElement("span");
- const d=Math.max(target.clientWidth,target.clientHeight);
- const r=d/2,rect=target.getBoundingClientRect();
- circle.className="ripple";
- circle.style.width=circle.style.height=`${d}px`;
- circle.style.left=`${e.clientX-rect.left-r}px`;
- circle.style.top =`${e.clientY-rect.top-r}px`;
- target.querySelector(".ripple")?.remove();
- target.appendChild(circle);
+ const t=e.target.closest(".btn-custom,.nav-link");
+ if(!t)return;
+ const c=document.createElement("span");
+ const d=Math.max(t.clientWidth,t.clientHeight),r=d/2,rect=t.getBoundingClientRect();
+ c.className="ripple";
+ c.style.width=c.style.height=`${d}px`;
+ c.style.left=`${e.clientX-rect.left-r}px`;
+ c.style.top =`${e.clientY-rect.top-r}px`;
+ t.querySelector(".ripple")?.remove();
+ t.appendChild(c);
 });
 
 /* zen mode */
@@ -277,12 +186,10 @@ document.querySelectorAll("textarea").forEach(t=>{
  t.addEventListener("blur" ,()=>document.body.classList.remove("zen-mode"));
 });
 
-/* mobile drawer toggle */
+/* drawer toggle */
 const btn=document.getElementById("mobile-menu-btn");
 const sidebar=document.querySelector(".sidebar");
-if(btn && sidebar){
- btn.addEventListener("click",()=>sidebar.classList.toggle("open"));
-}
+if(btn && sidebar){ btn.addEventListener("click",()=>sidebar.classList.toggle("open")); }
 </script>
 </body>
 </html>
