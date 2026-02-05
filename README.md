@@ -1,4 +1,4 @@
-# 😊 MoodCalendar
+# MoodCalendar
 
 Aplicativo web de **acompanhamento de humor**, onde o usuário pode registrar como foi o seu dia, visualizar seus humores ao longo do ano e gerenciar anotações de forma organizada.
 
