@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block conteudo %}
 <style>
-    /* Estilo dos Botões de Rádio Coloridos */
+    
     .mood-selector input[type="radio"] { display: none; }
     .mood-selector label {
         display: inline-block; width: 40px; height: 40px; border-radius: 50%;
@@ -11,7 +11,7 @@
     .mood-selector label:hover { transform: scale(1.1); }
     .mood-selector input[type="radio"]:checked + label { border-color: #4A403A; transform: scale(1.2); }
     
-    /* Preview da Capa */
+  
     #album-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 </style>
 
@@ -103,14 +103,14 @@
 </div>
 
 <script>
-    // Script para detectar link do YouTube e mostrar thumbnail
+  
     const linkInput = document.getElementById('link_input');
     const previewImg = document.getElementById('album-preview');
     const previewText = document.getElementById('preview-text');
 
     function checkLink() {
         const url = linkInput.value;
-        // Regex simples para pegar ID do Youtube
+        
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
         const match = url.match(regExp);
 
@@ -126,7 +126,7 @@
     }
 
     linkInput.addEventListener('input', checkLink);
-    // Roda ao carregar (se for edição)
+    
     if(linkInput.value) checkLink();
 </script>
 {% endblock %}

@@ -7,43 +7,40 @@ from datetime import datetime, date, timedelta
 
 app = Flask(__name__)
 
-# --- SEGURANÇA: PEGA AS CHAVES DAS VARIÁVEIS DE AMBIENTE (CONFIGURADAS NO VERCEL) ---
+
 app.secret_key = os.environ.get('SECRET_KEY', 'chave_padrao_para_teste_local')
 
-# Pega a URL do banco. Se não achar (rodando local), usa uma string vazia ou sqlite para teste
+
 db_url_env = os.environ.get('DATABASE_URL') 
 
 if db_url_env:
-    # Corrige o problema do 'postgres://' que o Vercel/Render/Heroku usam antigamente
     if db_url_env.startswith("postgres://"):
         db_url_env = db_url_env.replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url_env
 else:
-    # Fallback para rodar localmente se você não configurar variáveis no PC
-    # (Recomendo não deixar a senha real aqui, mas para teste rápido ok)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///meudiario.db' 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-# ... O RESTO DO CÓDIGO CONTINUA IGUAL ...
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# --- MODELOS ---
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     
-    # AQUI ESTÁ O NOME CORRETO DA COLUNA: password_hash
+    
     password_hash = db.Column(db.String(256), nullable=False)
     
-    # NOVOS CAMPOS GAMIFICAÇÃO
-    streak = db.Column(db.Integer, default=0)       # Dias seguidos
-    last_post_date = db.Column(db.Date, nullable=True) # Data do último post
-    xp_total = db.Column(db.Integer, default=0)     # Pontos totais
+
+    streak = db.Column(db.Integer, default=0)       
+    last_post_date = db.Column(db.Date, nullable=True) 
+    xp_total = db.Column(db.Integer, default=0)     
     
     diarios = db.relationship('Diario', backref='autor', lazy=True)
     tags = db.relationship('Tag', backref='dono', lazy=True)
@@ -85,7 +82,7 @@ def inject_tags():
         return dict(sidebar_tags=minhas_tags)
     return dict(sidebar_tags=[])
 
-# --- ROTAS ---
+
 @app.route('/')
 def home():
     if current_user.is_authenticated: return redirect('/dashboard')
@@ -206,7 +203,6 @@ def perfil():
         except: flash('Nome de usuário já existe.', 'danger')
     return render_template('profile.html')
 
-# --- ROTA DE LOGIN CORRIGIDA ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -214,11 +210,11 @@ def login():
     
     if request.method == 'POST':
         email_informado = request.form.get('email')
-        senha_informada = request.form.get('senha') # Vem do HTML name="senha"
+        senha_informada = request.form.get('senha') 
         
         usuario = User.query.filter_by(email=email_informado).first()
 
-        # CORREÇÃO APLICADA: usamos 'usuario.password_hash'
+        
         if usuario and check_password_hash(usuario.password_hash, senha_informada):
             login_user(usuario)
             flash('Login realizado com sucesso!', 'success')
